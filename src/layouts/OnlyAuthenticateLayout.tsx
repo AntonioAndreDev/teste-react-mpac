@@ -2,7 +2,7 @@
 // O ideal seria realizar a validação do token no backend fazendo uma requisição para um endpoint que verifica se o token é válido
 // Estamos realizando a validação apenas no frontend.
 
-import {Navigate, Outlet} from "react-router";
+import {Navigate, NavLink, Outlet, useLocation} from "react-router";
 import {Fragment, useState} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 import {
@@ -14,9 +14,9 @@ import {
 } from '@heroicons/react/24/outline'
 
 const navigation = [
-    {name: 'Ver todas as vagas', href: '#', icon: HomeIcon, current: true},
-    {name: 'Criar uma vaga', href: '#', icon: PlusIcon, current: false},
-    {name: 'Excluir uma vaga', href: '#', icon: DocumentDuplicateIcon, current: false},
+    {name: 'Ver todas as vagas', href: '/', icon: HomeIcon},
+    {name: 'Criar uma vaga', href: '/criar-vaga', icon: PlusIcon},
+    {name: 'Excluir uma vaga', href: '/excluir-vaga', icon: DocumentDuplicateIcon},
 ]
 
 
@@ -42,6 +42,8 @@ function classNames(...classes: string[]) {
 
 export default function OnlyAuthenticateLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const location = useLocation();
+
 
     const token = localStorage.getItem('token');
 
@@ -108,28 +110,34 @@ export default function OnlyAuthenticateLayout() {
                                             <ul role="list" className="flex flex-1 flex-col gap-y-12">
                                                 <li>
                                                     <ul role="list" className="-mx-2 space-y-1">
-                                                        {navigation.map((item) => (
-                                                            <li key={item.name}>
-                                                                <a
-                                                                    href={item.href}
-                                                                    className={classNames(
-                                                                        item.current
-                                                                            ? 'bg-gray-50 text-[#812316]'
-                                                                            : 'text-gray-700 hover:text-[#812316] hover:bg-gray-50',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                                    )}
-                                                                >
-                                                                    <item.icon
-                                                                        className={classNames(
-                                                                            item.current ? 'text-[#812316]' : 'text-gray-400 group-hover:text-[#812316]',
-                                                                            'h-6 w-6 shrink-0'
-                                                                        )}
-                                                                        aria-hidden="true"
-                                                                    />
-                                                                    {item.name}
-                                                                </a>
-                                                            </li>
-                                                        ))}
+                                                        {navigation.map((item) => {
+                                                            const isCurrent = location.pathname === item.href;
+                                                            return (
+                                                                <li key={item.name}>
+                                                                    <NavLink
+                                                                        to={item.href}
+                                                                        className={({isActive}) =>
+                                                                            classNames(
+                                                                                isActive
+                                                                                    ? 'bg-gray-50 text-[#812316]'
+                                                                                    : 'text-gray-700 hover:text-[#812316] hover:bg-gray-50',
+                                                                                'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <item.icon
+                                                                            className={classNames(
+                                                                                isCurrent ? 'text-[#812316]' : 'text-gray-400 group-hover:text-[#812316]',
+                                                                                'h-6 w-6 shrink-0'
+                                                                            )}
+                                                                            aria-hidden="true"
+                                                                        />
+
+                                                                        {item.name}
+                                                                    </NavLink>
+                                                                </li>
+                                                            )
+                                                        })}
                                                     </ul>
                                                 </li>
                                             </ul>
@@ -156,28 +164,34 @@ export default function OnlyAuthenticateLayout() {
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                 <li>
                                     <ul role="list" className="-mx-2 space-y-4">
-                                        {navigation.map((item) => (
-                                            <li key={item.name}>
-                                                <a
-                                                    href={item.href}
-                                                    className={classNames(
-                                                        item.current
-                                                            ? 'bg-gray-50 text-[#812316]'
-                                                            : 'text-gray-700 hover:text-[#812316] hover:bg-gray-50',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                    )}
-                                                >
-                                                    <item.icon
-                                                        className={classNames(
-                                                            item.current ? 'text-[#812316]' : 'text-gray-400 group-hover:text-[#812316]',
-                                                            'h-6 w-6 shrink-0'
-                                                        )}
-                                                        aria-hidden="true"
-                                                    />
-                                                    {item.name}
-                                                </a>
-                                            </li>
-                                        ))}
+                                        {navigation.map((item) => {
+                                            const isCurrent = location.pathname === item.href;
+                                            return (
+                                                <li key={item.name}>
+                                                    <NavLink
+                                                        to={item.href}
+                                                        className={({isActive}) =>
+                                                            classNames(
+                                                                isActive
+                                                                    ? 'bg-gray-50 text-[#812316]'
+                                                                    : 'text-gray-700 hover:text-[#812316] hover:bg-gray-50',
+                                                                'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                                            )
+                                                        }
+                                                    >
+                                                        <item.icon
+                                                            className={classNames(
+                                                                isCurrent ? 'text-[#812316]' : 'text-gray-400 group-hover:text-[#812316]',
+                                                                'h-6 w-6 shrink-0'
+                                                            )}
+                                                            aria-hidden="true"
+                                                        />
+
+                                                        {item.name}
+                                                    </NavLink>
+                                                </li>
+                                            )
+                                        })}
                                     </ul>
                                 </li>
                                 <li className="-mx-6 mt-auto">
