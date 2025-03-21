@@ -7,13 +7,11 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-        // const token = localStorage.getItem("token");
-        // if (token) {
-        //     config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFudG9uaW9hbmRyZTEwMDhAZ21haWwuY29tIiwiZXhwIjoxNzQyNjY3MTk1fQ.vqblUWB3lkGR2xh0plPoGR31lw_dzbJRfpXMwdMdJFQ`;
-        //
-        // }
+        const token = localStorage.getItem("token");
+        if (token) {
+            config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFudG9uaW9hbmRyZTEwMDhAZ21haWwuY29tIiwiZXhwIjoxNzQyNjY3MTk1fQ.vqblUWB3lkGR2xh0plPoGR31lw_dzbJRfpXMwdMdJFQ`;
 
-        config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFudG9uaW9hbmRyZTEwMDhAZ21haWwuY29tIiwiZXhwIjoxNzQyNjY3MTk1fQ.vqblUWB3lkGR2xh0plPoGR31lw_dzbJRfpXMwdMdJFQ`;
+        }
 
         return config;
     },
