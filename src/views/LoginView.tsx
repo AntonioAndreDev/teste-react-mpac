@@ -1,10 +1,59 @@
+import {z} from "zod";
+import {useState} from "react";
+import * as React from "react";
+
+const loginSchema = z.object({
+    email: z.string().email({message: 'Por favor, insira um email válido.'}),
+    password: z
+        .string()
+        .min(7, {message: 'A senha precisa ter pelo menos 7 caracteres.'})
+        .max(20, {message: 'A senha pode ter no máximo 20 caracteres.'}),
+});
+
 export default function LoginView() {
+    const [formData, setFormData] = useState({email: '', password: ''});
+    const [formErrors, setFormErrors] = useState<{ email?: string, password?: string }>();
+
+    const handleSubmission = (ev: React.FormEvent) => {
+        ev.preventDefault()
+
+        const zodSchemaResult = loginSchema.safeParse(formData);
+
+        if (zodSchemaResult.success) {
+            setFormErrors(
+                {
+                    email: undefined,
+                    password: undefined,
+                }
+            )
+            console.log("Sucesso: ", formData);
+        }
+
+        if (zodSchemaResult.error) {
+            const formErrors = zodSchemaResult.error.formErrors.fieldErrors;
+
+            setFormErrors({
+                email: formErrors.email?.[0],
+                password: formErrors.password?.[0],
+            });
+        }
+
+
+    }
+
+    const setFormValue = (ev: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({
+            ...formData,
+            [ev.target.name]: ev.target.value,
+        });
+    };
+
     return (
         <div className="bg-white w-full sm:w-1/4 mx-auto p-6 rounded-2xl shadow-xl">
             <div className="sm:mx-auto sm:w-full sm:max-w-lg">
                 <h2 className="text-center text-2xl font-bold tracking-tight text-gray-900">Entre na sua conta</h2>
 
-                <form className="space-y-4 mt-4">
+                <form className="space-y-4 mt-4" onSubmit={handleSubmission}>
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-900">Email</label>
                         <div className="mt-2">
@@ -13,10 +62,14 @@ export default function LoginView() {
                                 name="email"
                                 id="email"
                                 autoComplete="email"
-                                required
+                                value={formData.email}
+                                onChange={setFormValue}
                                 className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
                             />
                         </div>
+                        {formErrors?.email && (
+                            <p className="text-red-500 text-sm font-medium mt-2">{formErrors.email}</p>
+                        )}
                     </div>
 
                     <div>
@@ -30,10 +83,14 @@ export default function LoginView() {
                                 name="password"
                                 id="password"
                                 autoComplete="current-password"
-                                required
+                                value={formData.password}
+                                onChange={setFormValue}
                                 className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
                             />
                         </div>
+                        {formErrors?.password && (
+                            <p className="text-red-500 text-sm font-medium mt-2">{formErrors.password}</p>
+                        )}
                     </div>
 
                     <div className="text-sm text-end">
