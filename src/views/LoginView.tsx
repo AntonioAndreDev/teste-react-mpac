@@ -1,6 +1,9 @@
 import {z} from "zod";
 import {useState} from "react";
 import * as React from "react";
+import api from "../api/api.ts";
+import {AxiosError} from "axios";
+import {ApiError} from "../types/apiTypes.ts";
 
 const loginSchema = z.object({
     email: z.string().email({message: 'Por favor, insira um email válido.'}),
@@ -13,8 +16,9 @@ const loginSchema = z.object({
 export default function LoginView() {
     const [formData, setFormData] = useState({email: '', password: ''});
     const [formErrors, setFormErrors] = useState<{ email?: string, password?: string }>();
+    const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
 
-    const handleSubmission = (ev: React.FormEvent) => {
+    const handleSubmission = async (ev: React.FormEvent) => {
         ev.preventDefault()
 
         const zodSchemaResult = loginSchema.safeParse(formData);
@@ -25,8 +29,9 @@ export default function LoginView() {
                     email: undefined,
                     password: undefined,
                 }
-            )
-            console.log("Sucesso: ", formData);
+            );
+
+            await loginRequest(formData.email, formData.password);
         }
 
         if (zodSchemaResult.error) {
@@ -38,7 +43,18 @@ export default function LoginView() {
             });
         }
 
-
+        async function loginRequest(email: string, password: string) {
+            try {
+                const response = await api.post('/login', {email, password});
+                localStorage.setItem('token', response.data.message);
+            } catch (error) {
+                const axiosError = error as AxiosError<ApiError>;
+                setServerErrors({
+                    message: axiosError.response?.data.message || '',
+                    statusCode: axiosError.response?.data.statusCode || 0,
+                });
+            }
+        }
     }
 
     const setFormValue = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,6 +113,12 @@ export default function LoginView() {
                         <a href="#" className="font-semibold text-[#812316] hover:text-[#812316]/90">Esqueceu sua
                             senha?</a>
                     </div>
+
+                    {serverErrors && (
+                        <div className="bg-red-400 p-4 rounded-md">
+                            <p className="text-black text-sm font-semibold text-center uppercase">{serverErrors.message} ({serverErrors.statusCode})</p>
+                        </div>
+                    )}
 
                     <div>
                         <button
