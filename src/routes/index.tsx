@@ -2,12 +2,20 @@ import App from '../App';
 import {Route, Routes} from "react-router";
 import LoginView from "../views/LoginView.tsx";
 import AuthLayout from "../layouts/AuthLayout.tsx";
+import OnlyAuthenticateLayout from "../layouts/OnlyAuthenticateLayout.tsx";
+import OnlyGuestLayout from "../layouts/OnlyGuestLayout.tsx";
 
 const RoutesConfig = (
     <Routes>
-        <Route path="/" element={<App/>}/>
+
         <Route path="/login" element={<AuthLayout/>}>
-            <Route index element={<LoginView/>}/>
+            <Route element={<OnlyGuestLayout/>}>
+                <Route index element={<LoginView/>}/>
+            </Route>
+        </Route>
+
+        <Route path="/" element={<OnlyAuthenticateLayout/>}>
+            <Route index element={<App/>}/>
         </Route>
 
 

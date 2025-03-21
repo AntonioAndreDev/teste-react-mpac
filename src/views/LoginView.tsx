@@ -4,6 +4,7 @@ import * as React from "react";
 import api from "../api/api.ts";
 import {AxiosError} from "axios";
 import {ApiError} from "../types/apiTypes.ts";
+import {useNavigate} from "react-router";
 
 const loginSchema = z.object({
     email: z.string().email({message: 'Por favor, insira um email válido.'}),
@@ -17,6 +18,7 @@ export default function LoginView() {
     const [formData, setFormData] = useState({email: '', password: ''});
     const [formErrors, setFormErrors] = useState<{ email?: string, password?: string }>();
     const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
+    const navigate = useNavigate();
 
     const handleSubmission = async (ev: React.FormEvent) => {
         ev.preventDefault()
@@ -47,6 +49,7 @@ export default function LoginView() {
             try {
                 const response = await api.post('/login', {email, password});
                 localStorage.setItem('token', response.data.message);
+                navigate('/');
             } catch (error) {
                 const axiosError = error as AxiosError<ApiError>;
                 setServerErrors({
