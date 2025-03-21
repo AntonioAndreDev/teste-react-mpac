@@ -10,7 +10,8 @@ import {
     DocumentDuplicateIcon,
     HomeIcon,
     XMarkIcon,
-    PlusIcon
+    PlusIcon,
+    ArrowLeftEndOnRectangleIcon
 } from '@heroicons/react/24/outline'
 
 const navigation = [
@@ -194,19 +195,25 @@ export default function OnlyAuthenticateLayout() {
                                         })}
                                     </ul>
                                 </li>
-                                <li className="-mx-6 mt-auto">
-                                    <a
-                                        href="#"
-                                        className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
-                                    >
-                                        <img
-                                            className="h-8 w-8 rounded-full bg-gray-50"
-                                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                            alt=""
+                                <li className="-mx-6 mt-auto flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50">
+                                    <img
+                                        className="h-8 w-8 rounded-full bg-gray-50"
+                                        src="https://avatars.githubusercontent.com/u/117135970?s=400&u=ebde57e649a7a7dc3175584fd274d016627a279e&v=4"
+                                        alt="Foto de perfil"
+                                    />
+                                    <span className="sr-only">Your profile</span>
+                                    <div className="flex justify-between w-full">
+                                        <span aria-hidden="true">Antônio André</span>
+
+                                        <ArrowLeftEndOnRectangleIcon className="h-6 w-6 text-red-600 cursor-pointer"
+                                                                     aria-hidden="true"
+                                                                     onClick={() => {
+                                                                         localStorage.removeItem('token');
+                                                                         window.location.href = '/login';
+                                                                     }}
                                         />
-                                        <span className="sr-only">Your profile</span>
-                                        <span aria-hidden="true">Tom Cook</span>
-                                    </a>
+
+                                    </div>
                                 </li>
                             </ul>
                         </nav>
