@@ -1,10 +1,4 @@
-import {Skeleton} from "@/components/ui/skeleton.tsx";
-
-{/*Observação importante:
-    A API retorna uma mensagem de erro quando não há nenhuma vaga cadastrada.
-    Dando conflito com a verificação de length do array de vagas, por isso comentei trechos desse código.
-*/
-}
+import HomeLoadingSkeleton from "@/components/home-view/loading-structures/HomeLoadingSkeleton.tsx";
 import DeleteJobVacancyDialog from "@/components/DeleteJobVacancyDialog.tsx";
 import {useEffect, useState} from "react";
 import api from "../api/api.ts";
@@ -21,6 +15,12 @@ import {
 import {TrashIcon, PencilSquareIcon} from '@heroicons/react/24/outline'
 import formatIntToSalary from "@/utils/formatIntToSalary.ts";
 import {formatDateToPtBr} from "@/utils/formateDateToPtBr.ts";
+
+{/*Observação importante:
+    A API retorna uma mensagem de erro quando não há nenhuma vaga cadastrada.
+    Dando conflito com a verificação de length do array de vagas, por isso comentei trechos desse código.
+*/
+}
 
 export default function HomeView() {
     const [jobVacancies, setJobVacancies] = useState([]);
@@ -65,24 +65,7 @@ export default function HomeView() {
 
     if (isLoading) {
         return (
-            <div>
-                <Skeleton className="h-12 w-1/4"/>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
-                    <Skeleton className="h-40 w-full"/>
-                    <Skeleton className="h-40 w-full"/>
-                    <Skeleton className="h-40 w-full"/>
-                    <Skeleton className="h-40 w-full"/>
-                    <Skeleton className="h-40 w-full"/>
-                    <Skeleton className="h-40 w-full"/>
-                    <Skeleton className="h-40 w-full"/>
-                    <Skeleton className="h-40 w-full"/>
-                    <Skeleton className="h-40 w-full"/>
-                    <Skeleton className="h-40 w-full"/>
-
-                </div>
-
-            </div>
+            <HomeLoadingSkeleton/>
         )
     }
 
