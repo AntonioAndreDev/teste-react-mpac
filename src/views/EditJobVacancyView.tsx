@@ -7,6 +7,7 @@ import {toast} from "sonner";
 import {useJobStore} from "@/store/useJobStore.ts";
 import EditJobLoadingSkeleton from "@/components/edit-job-view/loading-structures/EditJobLoadingSkeleton.tsx";
 import {createOrEditJobSchema} from "@/validations/zodSchemas.ts";
+import {JobVacancyFormData} from "@/types/jobTypes.ts";
 
 
 export default function EditJobVacancyView() {
@@ -19,7 +20,7 @@ export default function EditJobVacancyView() {
 
     useEffect(() => {
         fetchShowJobVacancy(Number(vagaId));
-    }, [vagaId]);
+    }, []);
 
     useEffect(() => {
         if (jobVacancy && jobVacancy.company !== undefined) {
@@ -88,14 +89,7 @@ export default function EditJobVacancyView() {
             });
         }
 
-        async function editJobRequest(formData: {
-            company: string;
-            link: string;
-            location: string;
-            remote: boolean;
-            role: string;
-            salary: number;
-        }) {
+        async function editJobRequest(formData: JobVacancyFormData) {
             fetchEditJobVacancy(Number(vagaId), formData);
 
             setFormData({

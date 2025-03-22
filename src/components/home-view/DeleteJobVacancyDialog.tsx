@@ -8,8 +8,8 @@ import {
     AlertDialogTitle
 } from "@/components/ui/alert-dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
-import {JobVacancy} from "@/types/apiTypes.ts";
 import {toast} from "sonner";
+import {JobVacancy} from "@/types/jobTypes.ts";
 
 export default function DeleteJobVacancyDialog({
                                                    selectedJobToDelete,

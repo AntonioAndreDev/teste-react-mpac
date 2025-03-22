@@ -1,6 +1,6 @@
 import {create} from "zustand";
-import {JobVacancy} from "@/types/apiTypes.ts";
 import api from "@/api/api.ts";
+import {JobVacancy, JobVacancyFormData} from "@/types/jobTypes.ts";
 
 interface JobStore {
     jobVacancies: JobVacancy[];
@@ -9,16 +9,9 @@ interface JobStore {
     removeJobVacancy: (id: number) => Promise<void>;
     fetchShowJobVacancy: (id: number) => Promise<void>;
     jobVacancy: JobVacancy;
-    formData: {
-        company: string;
-        link: string;
-        location: string;
-        remote: boolean;
-        role: string;
-        salary: number;
-    };
-    fetchEditJobVacancy: (id: number, formData: JobStore['formData']) => Promise<void>;
-    fetchCreateJobVacancy: (formData: JobStore['formData']) => Promise<void>;
+    formData: JobVacancyFormData;
+    fetchEditJobVacancy: (id: number, formData: JobVacancyFormData) => Promise<void>;
+    fetchCreateJobVacancy: (formData: JobVacancyFormData) => Promise<void>;
 
 }
 
@@ -89,7 +82,7 @@ export const useJobStore = create<JobStore>((set) => ({
         }
     },
 
-    fetchEditJobVacancy: async (id: number, formData: JobStore['formData']) => {
+    fetchEditJobVacancy: async (id: number, formData: JobVacancyFormData) => {
         try {
             console.log("Iniciando fetchEditJobVacancy...");
             set({isLoading: true});
@@ -104,7 +97,7 @@ export const useJobStore = create<JobStore>((set) => ({
         }
     },
 
-    fetchCreateJobVacancy: async (formData: JobStore['formData']) => {
+    fetchCreateJobVacancy: async (formData: JobVacancyFormData) => {
         try {
             console.log("Iniciando fetchCreateJobVacancy...");
             set({isLoading: true});

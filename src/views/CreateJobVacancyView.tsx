@@ -4,6 +4,7 @@ import formatSalaryToInt from "../utils/formatSalaryToInt.ts";
 import {toast} from "sonner";
 import {useJobStore} from "@/store/useJobStore.ts";
 import {createOrEditJobSchema} from "@/validations/zodSchemas.ts";
+import {JobVacancyFormData} from "@/types/jobTypes.ts";
 
 
 export default function CreateJobVacancyView() {
@@ -62,14 +63,7 @@ export default function CreateJobVacancyView() {
             });
         }
 
-        async function createJobRequest(formData: {
-            company: string;
-            link: string;
-            location: string;
-            remote: boolean;
-            role: string;
-            salary: number;
-        }) {
+        async function createJobRequest(formData: JobVacancyFormData) {
             fetchCreateJobVacancy(formData)
 
             setFormData({

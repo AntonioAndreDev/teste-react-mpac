@@ -10,11 +10,11 @@ import {
 import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
 import formatIntToSalary from "@/utils/formatIntToSalary.ts";
 import {formatDateToPtBr} from "@/utils/formateDateToPtBr.ts";
-import {JobVacancy} from "@/types/apiTypes.ts";
 import {useNavigate} from "react-router";
 import DeleteJobVacancyDialog from "@/components/home-view/DeleteJobVacancyDialog.tsx";
 import {useState} from "react";
 import {useJobStore} from "@/store/useJobStore.ts";
+import {JobVacancy} from "@/types/jobTypes.ts";
 
 export default function JobVacancyItem({jobVacancy}: { jobVacancy: JobVacancy }) {
     const {fetchJobVacancies, removeJobVacancy} = useJobStore();

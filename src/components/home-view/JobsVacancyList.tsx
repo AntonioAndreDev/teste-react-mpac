@@ -1,9 +1,9 @@
-import {JobVacancy} from "@/types/apiTypes.ts";
 import {useEffect} from "react";
 import HomeLoadingSkeleton from "@/components/home-view/loading-structures/HomeLoadingSkeleton.tsx";
 import {useJobStore} from "@/store/useJobStore.ts";
 import EmptyJobVacancy from "@/components/home-view/EmptyJobVacancy.tsx";
 import JobVacancyItem from "@/components/home-view/JobVacancyItem.tsx";
+import {JobVacancy} from "@/types/jobTypes.ts";
 
 export default function JobsVacancyList() {
     const {jobVacancies, fetchJobVacancies, isLoading} = useJobStore();
