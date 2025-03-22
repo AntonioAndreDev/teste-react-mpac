@@ -1,8 +1,6 @@
 import {z} from "zod";
 import {useEffect, useState} from "react";
 import * as React from "react";
-import {AxiosError} from "axios";
-import {ApiError} from "../types/apiTypes.ts";
 import formatSalaryToInt from "../utils/formatSalaryToInt.ts";
 import {useNavigate, useParams} from "react-router";
 import formatIntToSalary from "@/utils/formatIntToSalary.ts";
@@ -74,7 +72,6 @@ export default function EditJobVacancyView() {
         role?: string,
         salary?: string,
     }>();
-    const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
 
     const setFormValue = (ev: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({...formData, [ev.target.name]: ev.target.value});
@@ -121,31 +118,24 @@ export default function EditJobVacancyView() {
             role: string;
             salary: number;
         }) {
-            try {
-                fetchEditJobVacancy(Number(vagaId), formData);
+            fetchEditJobVacancy(Number(vagaId), formData);
 
-                setFormData({
-                    company: '',
-                    link: '',
-                    location: '',
-                    remote: false,
-                    role: '',
-                    salary: '',
-                });
+            setFormData({
+                company: '',
+                link: '',
+                location: '',
+                remote: false,
+                role: '',
+                salary: '',
+            });
 
-                navigate('/')
-                toast.success('Vaga editada com sucesso!', {
-                    className: '!bg-green-500 !text-white !text-base',
-                    duration: 8_000
-                })
+            navigate('/')
+            toast.success('Vaga editada com sucesso!', {
+                className: '!bg-green-500 !text-white !text-base',
+                duration: 8_000
+            })
 
-            } catch (error) {
-                const axiosError = error as AxiosError<ApiError>;
-                setServerErrors({
-                    message: axiosError.response?.data.message || '',
-                    statusCode: axiosError.response?.data.statusCode || 0,
-                });
-            }
+
         }
     };
 
@@ -283,11 +273,6 @@ export default function EditJobVacancyView() {
                     </div>
                 </div>
 
-                {serverErrors && (
-                    <div className="bg-red-400 p-4 rounded-md">
-                        <p className="text-black text-sm font-semibold text-center uppercase">{serverErrors.message} ({serverErrors.statusCode})</p>
-                    </div>
-                )}
 
                 <div>
                     <button
