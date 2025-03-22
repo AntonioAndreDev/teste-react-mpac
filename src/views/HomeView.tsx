@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import api from "../api/api.ts";
 import {AxiosError} from "axios";
 import {ApiError, JobVacancy} from "../types/apiTypes.ts";
-import {Link, useNavigate} from "react-router";
+import {useNavigate} from "react-router";
 import {
     AlertDialog, AlertDialogAction, AlertDialogCancel,
     AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
@@ -15,6 +15,7 @@ import {
 import {TrashIcon, PencilSquareIcon} from '@heroicons/react/24/outline'
 import formatIntToSalary from "@/utils/formatIntToSalary.ts";
 import {formatDateToPtBr} from "@/utils/formateDateToPtBr.ts";
+import EmptyJobVacancy from "@/components/home-view/EmptyJobVacancy.tsx";
 
 {/*Observação importante:
     A API retorna uma mensagem de erro quando não há nenhuma vaga cadastrada.
@@ -69,6 +70,12 @@ export default function HomeView() {
         )
     }
 
+    if (jobVacancies.length === 0) {
+        return (
+            <EmptyJobVacancy/>
+        )
+    }
+
     return (
         <>
             {/*
@@ -82,16 +89,6 @@ export default function HomeView() {
             )}
             */}
 
-            {jobVacancies.length === 0 && (
-                <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">Nenhuma vaga encontrada</h2>
-                    <span className="block sm:inline">Parece que ainda não há nenhuma vagas disponível</span>
-                    <Link className="block font-medium border border-gray-500 w-fit p-1 rounded hover:underline"
-                          to="/criar-vaga">
-                        Criar uma vaga
-                    </Link>
-                </div>
-            )}
 
             {jobVacancies.length > 0 && (
                 <>
