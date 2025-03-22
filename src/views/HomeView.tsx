@@ -122,7 +122,7 @@ export default function HomeView() {
                                         className="flex flex-col border-2 border-gray-200 rounded-lg p-6 bg-white hover:border-[#812316] cursor-pointer transition-all duration-200"
                                     >
                                         <div className="flex justify-between w-full">
-                                            <h3 className="text-lg font-semibold text-gray-900">{jobVacancy.role}</h3>
+                                            <h3 className="text-lg font-semibold text-start text-gray-900">{jobVacancy.role}</h3>
                                             <div className="flex gap-x-4">
                                                 <div
                                                     onClick={(ev) => {
@@ -147,8 +147,8 @@ export default function HomeView() {
                                             </div>
 
                                         </div>
-                                        <p className="text-sm text-gray-500 mt-1">Empresa: {jobVacancy.company}</p>
-                                        <p className="text-sm text-gray-500 mt-1">Localização: {jobVacancy.location}</p>
+                                        <p className="text-sm text-start text-gray-500 mt-1">Empresa: {jobVacancy.company}</p>
+                                        <p className="text-sm text-start text-gray-500 mt-1">Localização: {jobVacancy.location}</p>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>
                                         <AlertDialogHeader>
