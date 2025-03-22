@@ -1,11 +1,8 @@
 import {NavLink} from "react-router";
 import {ArrowLeftEndOnRectangleIcon} from "@heroicons/react/24/outline";
 import {navigation} from "@/routes/navigation.ts";
+import {classNames} from "@/utils/classNames.ts";
 
-
-function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
-}
 
 export default function DesktopNav() {
     return (
