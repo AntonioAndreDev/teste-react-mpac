@@ -1,3 +1,9 @@
+{/*Observação importante:
+    A API retorna uma mensagem de erro quando não há nenhuma vaga cadastrada.
+    Dando conflito com a verificação de length do array de vagas, por isso comentei trechos desse código.
+*/
+}
+
 import {useEffect, useState} from "react";
 import api from "../api/api.ts";
 import {AxiosError} from "axios";
@@ -15,7 +21,7 @@ import {formatDateToPtBr} from "@/utils/formateDateToPtBr.ts";
 
 export default function HomeView() {
     const [jobVacancies, setJobVacancies] = useState([]);
-    const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
+    // const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
 
     useEffect(() => {
         async function fetchJobVacancies() {
@@ -25,10 +31,11 @@ export default function HomeView() {
 
             } catch (error) {
                 const axiosError = error as AxiosError<ApiError>;
-                setServerErrors({
-                    message: axiosError.response?.data.message || '',
-                    statusCode: axiosError.response?.data.statusCode || 0,
-                });
+                console.log(axiosError)
+                // setServerErrors({
+                //     message: axiosError.response?.data.message || '',
+                //     statusCode: axiosError.response?.data.statusCode || 0,
+                // });
             }
         }
 
@@ -37,6 +44,7 @@ export default function HomeView() {
 
     return (
         <>
+            {/*
             {serverErrors && (
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight text-gray-900">Opps... parece que houve um
@@ -45,6 +53,7 @@ export default function HomeView() {
                     <span className="block sm:inline">{serverErrors?.statusCode}</span>
                 </div>
             )}
+            */}
 
             {jobVacancies.length === 0 && (
                 <div>
