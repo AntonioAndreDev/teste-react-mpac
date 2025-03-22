@@ -3,6 +3,15 @@ import api from "../api/api.ts";
 import {AxiosError} from "axios";
 import {ApiError, JobVacancy} from "../types/apiTypes.ts";
 import {Link} from "react-router";
+import {
+    AlertDialog, AlertDialogAction, AlertDialogCancel,
+    AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger
+} from "@/components/ui/alert-dialog.tsx";
+import formatIntToSalary from "@/utils/formatIntToSalary.ts";
+import {formatDateToPtBr} from "@/utils/formateDateToPtBr.ts";
 
 export default function HomeView() {
     const [jobVacancies, setJobVacancies] = useState([]);
@@ -49,22 +58,72 @@ export default function HomeView() {
             )}
 
             {jobVacancies.length > 0 && (
-                <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">Lista de Vagas</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
-                        {jobVacancies.map((jobVacancy: JobVacancy) => (
-                            <div
-                                key={jobVacancy.id}
-                                className="border-2 border-gray-200 rounded-lg p-6 bg-white hover:border-[#812316] cursor-pointer transition-all duration-200"
-                            >
-                                <h3 className="text-lg font-semibold text-gray-900">{jobVacancy.role}</h3>
-                                <p className="text-sm text-gray-500 mt-1">Empresa: {jobVacancy.company}</p>
-                                <p className="text-sm text-gray-500 mt-1">Localização: {jobVacancy.location}</p>
-                            </div>
-                        ))}
-                    </div>
+                <>
 
-                </div>
+                    <div>
+                        <h2 className="text-2xl font-bold tracking-tight text-gray-900">Lista de Vagas</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+                            {jobVacancies.map((jobVacancy: JobVacancy) => (
+                                <AlertDialog key={jobVacancy.id}>
+                                    <AlertDialogTrigger
+                                        className="flex flex-col border-2 border-gray-200 rounded-lg p-6 bg-white hover:border-[#812316] cursor-pointer transition-all duration-200"
+                                    >
+                                        <h3 className="text-lg font-semibold text-gray-900">{jobVacancy.role}</h3>
+                                        <p className="text-sm text-gray-500 mt-1">Empresa: {jobVacancy.company}</p>
+                                        <p className="text-sm text-gray-500 mt-1">Localização: {jobVacancy.location}</p>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle className="text-xl">{jobVacancy.role}</AlertDialogTitle>
+                                            <AlertDialogDescription className="flex flex-col gap-y-1">
+                                                <span
+                                                    className="text-base text-gray-500"
+                                                >
+                                                    <strong>Empresa</strong>: {jobVacancy.company}
+                                                </span>
+
+                                                <span
+                                                    className="text-base text-gray-500"
+                                                >
+                                                    <strong>Localização</strong>: {jobVacancy.location}
+                                                </span>
+                                                <span
+                                                    className="text-base text-gray-500"
+                                                >
+                                                    <strong>Salário (Bruto)</strong>: R${formatIntToSalary(jobVacancy.salary)}
+                                                </span>
+                                                <span
+                                                    className="text-base text-gray-500"
+                                                >
+                                                    <strong>Modalidade</strong>: {jobVacancy.remote ? 'Remoto' : 'Presencial'}
+                                                </span>
+
+                                                <span
+                                                    className="text-base text-gray-500"
+                                                >
+                                                    <strong>Vaga criada em</strong>: {formatDateToPtBr(jobVacancy.created_at)}
+                                                </span>
+
+
+                                                <a target="_blank" referrerPolicy="no-referrer"
+                                                   className="text-base text-gray-500 underline italic"
+                                                   href={jobVacancy.link}
+                                                >
+                                                    Saiba mais
+                                                </a>
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Fechar</AlertDialogCancel>
+                                            <AlertDialogAction>Candidatar-se</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+
+                            ))}
+                        </div>
+                    </div>
+                </>
             )}
 
 
