@@ -8,6 +8,7 @@ import {useNavigate, useParams} from "react-router";
 import formatIntToSalary from "@/utils/formatIntToSalary.ts";
 import {toast} from "sonner";
 import {useJobStore} from "@/store/useJobStore.ts";
+import EditJobLoadingSkeleton from "@/components/edit-job-view/loading-structures/EditJobLoadingSkeleton.tsx";
 
 const createJobSchema = z.object({
     company: z
@@ -147,6 +148,10 @@ export default function EditJobVacancyView() {
             }
         }
     };
+
+    if (isLoading) {
+        return <EditJobLoadingSkeleton/>
+    }
 
     return (
         <div>
