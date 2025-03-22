@@ -19,7 +19,7 @@ export default function JobsVacancyList({jobVacancies}: {
     jobVacancies: JobVacancy[],
 }) {
     const navigate = useNavigate();
-    const [selectedJobToDelete, setSelectedJob] = useState<JobVacancy | null>(null);
+    const [selectedJobToDelete, setSelectedJobToDelete] = useState<JobVacancy | null>(null);
     const [jobVacanciesState, setJobVacanciesState] = useState(jobVacancies);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -57,7 +57,7 @@ export default function JobsVacancyList({jobVacancies}: {
                                     <div
                                         onClick={(ev) => {
                                             ev.stopPropagation();
-                                            setSelectedJob(jobVacancy)
+                                            setSelectedJobToDelete(jobVacancy)
                                         }}
                                     >
                                         <TrashIcon className="sm:size-6 size-5 text-red-600 cursor-pointer"
@@ -136,7 +136,8 @@ export default function JobsVacancyList({jobVacancies}: {
             </div>
 
             {selectedJobToDelete &&
-							<DeleteJobVacancyDialog selectedJobToDelete={selectedJobToDelete} setSelectedJob={setSelectedJob}
+							<DeleteJobVacancyDialog selectedJobToDelete={selectedJobToDelete}
+							                        setSelectedJobToDelete={setSelectedJobToDelete}
 							                        onJobVacancyDeleted={onJobVacancyDeleted}/>}
         </>
 
