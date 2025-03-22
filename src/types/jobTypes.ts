@@ -18,3 +18,11 @@ export interface JobVacancyFormData {
     role: string;
     salary: number;
 }
+
+export interface JobVacancyFormDataErrors {
+    company?: string,
+    link?: string,
+    location?: string,
+    role?: string,
+    salary?: string,
+}
