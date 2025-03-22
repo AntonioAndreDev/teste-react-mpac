@@ -1,5 +1,6 @@
 import {ArrowLeftEndOnRectangleIcon} from "@heroicons/react/24/outline";
 import {useNavigate} from "react-router";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 
 export default function Logout() {
     const navigate = useNavigate()
@@ -14,13 +15,23 @@ export default function Logout() {
             <div className="flex justify-between w-full">
                 <span aria-hidden="true">Antônio André</span>
 
-                <ArrowLeftEndOnRectangleIcon className="h-6 w-6 text-red-600 cursor-pointer"
-                                             aria-hidden="true"
-                                             onClick={() => {
-                                                 localStorage.removeItem('token');
-                                                 navigate('/login')
-                                             }}
-                />
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <ArrowLeftEndOnRectangleIcon className="h-6 w-6 text-red-600 cursor-pointer"
+                                                         aria-hidden="true"
+                                                         onClick={() => {
+                                                             localStorage.removeItem('token');
+                                                             navigate('/login')
+                                                         }}
+                            />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Sair da conta</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+
 
             </div>
         </li>

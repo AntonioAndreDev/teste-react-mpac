@@ -15,6 +15,7 @@ import DeleteJobVacancyDialog from "@/components/home-view/DeleteJobVacancyDialo
 import {useState} from "react";
 import {useJobStore} from "@/store/useJobStore.ts";
 import {JobVacancy} from "@/types/jobTypes.ts";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 
 export default function JobVacancyItem({jobVacancy}: { jobVacancy: JobVacancy }) {
     const {fetchJobVacancies, removeJobVacancy} = useJobStore();
@@ -40,25 +41,47 @@ export default function JobVacancyItem({jobVacancy}: { jobVacancy: JobVacancy })
                     <div className="flex justify-between items-center gap-1 flex-wrap w-full">
                         <h3 className="text-lg font-semibold text-start text-gray-900">{jobVacancy.role}</h3>
                         <div className="flex gap-x-4">
-                            <div
-                                onClick={(ev) => {
-                                    ev.stopPropagation();
-                                    setSelectedJobToDelete(jobVacancy);
-                                }}
-                            >
-                                <TrashIcon className="sm:size-6 size-5 text-red-600 cursor-pointer"
-                                           aria-hidden="true"/>
-                            </div>
 
-                            <div
-                                onClick={(ev) => {
-                                    ev.stopPropagation();
-                                    navigate(`/editar-vaga/${jobVacancy.id}`);
-                                }}
-                            >
-                                <PencilSquareIcon className="sm:size-6 size-5 text-yellow-600 cursor-pointer"
-                                                  aria-hidden="true"/>
-                            </div>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <div
+                                            onClick={(ev) => {
+                                                ev.stopPropagation();
+                                                setSelectedJobToDelete(jobVacancy);
+                                            }}
+                                        >
+                                            <TrashIcon className="sm:size-6 size-5 text-red-600 cursor-pointer"
+                                                       aria-hidden="true"/>
+                                        </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Excluir vaga</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <div
+                                            onClick={(ev) => {
+                                                ev.stopPropagation();
+                                                navigate(`/editar-vaga/${jobVacancy.id}`);
+                                            }}
+                                        >
+                                            <PencilSquareIcon
+                                                className="sm:size-6 size-5 text-yellow-600 cursor-pointer"
+                                                aria-hidden="true"/>
+                                        </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Editar vaga</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+
+
                         </div>
                     </div>
                     <p className="text-sm text-start text-gray-500 mt-1">Empresa: {jobVacancy.company}</p>
