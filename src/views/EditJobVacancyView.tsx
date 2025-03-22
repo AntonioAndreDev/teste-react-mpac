@@ -1,11 +1,12 @@
 import {z} from "zod";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import * as React from "react";
 import api from "../api/api.ts";
 import {AxiosError} from "axios";
 import {ApiError} from "../types/apiTypes.ts";
 import formatSalaryToInt from "../utils/formatSalaryToInt.ts";
 import {useParams} from "react-router";
+import formatIntToSalary from "@/utils/formatIntToSalary.ts";
 
 const createJobSchema = z.object({
     company: z
@@ -32,7 +33,33 @@ const createJobSchema = z.object({
 
 export default function EditJobVacancyView() {
     const {vagaId} = useParams()
-    console.log(vagaId)
+
+    useEffect(() => {
+        async function showJobVacancy() {
+            try {
+                const response = await api.get(`/opening?id=${vagaId}`);
+                const job = response.data.message;
+
+                setFormData({
+                    company: job.company,
+                    link: job.link,
+                    location: job.location,
+                    remote: job.remote,
+                    role: job.role,
+                    salary: formatIntToSalary(job.salary),
+                });
+            } catch (error) {
+                const axiosError = error as AxiosError<ApiError>;
+                setServerErrors({
+                    message: axiosError.response?.data.message || '',
+                    statusCode: axiosError.response?.data.statusCode || 0,
+                });
+            }
+        }
+
+        showJobVacancy()
+    }, [vagaId])
+
     const [formData, setFormData] = useState({
         company: '',
         link: '',
@@ -97,7 +124,7 @@ export default function EditJobVacancyView() {
             salary: number;
         }) {
             try {
-                await api.put('/opening?id=', formData);
+                await api.put(`/opening?id=${vagaId}`, formData);
 
                 setFormData({
                     company: '',
