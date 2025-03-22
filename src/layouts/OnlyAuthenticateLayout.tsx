@@ -7,7 +7,6 @@ import {Fragment, useState} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 import {
     Bars3Icon,
-    DocumentDuplicateIcon,
     HomeIcon,
     XMarkIcon,
     PlusIcon,
@@ -17,7 +16,6 @@ import {
 const navigation = [
     {name: 'Ver todas as vagas', href: '/', icon: HomeIcon},
     {name: 'Criar uma vaga', href: '/criar-vaga', icon: PlusIcon},
-    {name: 'Excluir uma vaga', href: '/excluir-vaga', icon: DocumentDuplicateIcon},
 ]
 
 
