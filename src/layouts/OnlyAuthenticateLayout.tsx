@@ -12,6 +12,7 @@ import {
     PlusIcon,
     ArrowLeftEndOnRectangleIcon
 } from '@heroicons/react/24/outline'
+import {Toaster} from "@/components/ui/sonner.tsx";
 
 const navigation = [
     {name: 'Ver todas as vagas', href: '/', icon: HomeIcon},
@@ -241,6 +242,8 @@ export default function OnlyAuthenticateLayout() {
                         <Outlet/>
                     </div>
                 </main>
+
+                <Toaster/>
             </div>
         </>
     )

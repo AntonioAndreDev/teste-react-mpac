@@ -5,6 +5,7 @@ import api from "../api/api.ts";
 import {AxiosError} from "axios";
 import {ApiError} from "../types/apiTypes.ts";
 import {useNavigate} from "react-router";
+import {toast} from "sonner";
 
 const loginSchema = z.object({
     email: z.string().email({message: 'Por favor, insira um email válido.'}),
@@ -17,7 +18,6 @@ const loginSchema = z.object({
 export default function LoginView() {
     const [formData, setFormData] = useState({email: '', password: ''});
     const [formErrors, setFormErrors] = useState<{ email?: string, password?: string }>();
-    const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
     const navigate = useNavigate();
 
     const handleSubmission = async (ev: React.FormEvent) => {
@@ -52,10 +52,11 @@ export default function LoginView() {
                 navigate('/');
             } catch (error) {
                 const axiosError = error as AxiosError<ApiError>;
-                setServerErrors({
-                    message: axiosError.response?.data.message || '',
-                    statusCode: axiosError.response?.data.statusCode || 0,
-                });
+
+
+                toast.error(`Erro ${axiosError.response?.data.statusCode}: ${axiosError.response?.data.message}`, {
+                    duration: 12_000
+                })
             }
         }
     }
@@ -117,11 +118,6 @@ export default function LoginView() {
                             senha?</a>
                     </div>
 
-                    {serverErrors && (
-                        <div className="bg-red-400 p-4 rounded-md">
-                            <p className="text-black text-sm font-semibold text-center uppercase">{serverErrors.message} ({serverErrors.statusCode})</p>
-                        </div>
-                    )}
 
                     <div>
                         <button

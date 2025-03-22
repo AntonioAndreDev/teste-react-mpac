@@ -10,6 +10,7 @@ import {
 import {Button} from "@/components/ui/button.tsx";
 import {JobVacancy} from "@/types/apiTypes.ts";
 import api from "@/api/api.ts";
+import {toast} from "sonner";
 
 export default function DeleteJobVacancyDialog({selectedJobToDelete, setSelectedJob, onJobVacancyDeleted}: {
     selectedJobToDelete: JobVacancy | null,
@@ -21,7 +22,10 @@ export default function DeleteJobVacancyDialog({selectedJobToDelete, setSelected
         try {
             await api.delete(`/opening?id=${id}`);
             setSelectedJob(null);
-
+            toast.success('Vaga apagada com sucesso!', {
+                className: '!bg-green-500 !text-white !text-base',
+                duration: 8_000
+            })
             await onJobVacancyDeleted(true);
         } catch (error) {
             console.error("Erro ao deletar vaga", error);

@@ -5,6 +5,7 @@ import api from "../api/api.ts";
 import {AxiosError} from "axios";
 import {ApiError} from "../types/apiTypes.ts";
 import formatSalaryToInt from "../utils/formatSalaryToInt.ts";
+import {toast} from "sonner";
 
 const createJobSchema = z.object({
     company: z
@@ -46,7 +47,6 @@ export default function CreateJobVacancyView() {
         salary?: string,
     }>();
     const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
-    const [successMessage, setSuccessMessage] = useState<string>();
 
     const setFormValue = (ev: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({...formData, [ev.target.name]: ev.target.value});
@@ -105,8 +105,10 @@ export default function CreateJobVacancyView() {
                     salary: '',
                 });
 
-                setSuccessMessage('Vaga cadastrada com sucesso!');
-                setTimeout(() => setSuccessMessage(undefined), 5000);
+                toast.success('Vaga cadastrada com sucesso!', {
+                    className: '!bg-green-500 !text-white !text-base',
+                    duration: 8_000
+                })
 
             } catch (error) {
                 const axiosError = error as AxiosError<ApiError>;
@@ -248,11 +250,6 @@ export default function CreateJobVacancyView() {
                     </div>
                 )}
 
-                {successMessage && (
-                    <div className="bg-green-400 p-4 rounded-md">
-                        <p className="text-black text-sm font-semibold text-center uppercase">{successMessage}</p>
-                    </div>
-                )}
 
                 <div>
                     <button
