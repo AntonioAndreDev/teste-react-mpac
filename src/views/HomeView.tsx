@@ -121,7 +121,7 @@ export default function HomeView() {
                                     <AlertDialogTrigger
                                         className="flex flex-col border-2 border-gray-200 rounded-lg p-6 bg-white hover:border-[#812316] cursor-pointer transition-all duration-200"
                                     >
-                                        <div className="flex justify-between w-full">
+                                        <div className="flex justify-between items-center gap-1 flex-wrap w-full">
                                             <h3 className="text-lg font-semibold text-start text-gray-900">{jobVacancy.role}</h3>
                                             <div className="flex gap-x-4">
                                                 <div
@@ -130,7 +130,7 @@ export default function HomeView() {
                                                         setSelectedJob(jobVacancy);
                                                     }}
                                                 >
-                                                    <TrashIcon className="h-6 w-6 text-red-600 cursor-pointer"
+                                                    <TrashIcon className="sm:size-6 size-5 text-red-600 cursor-pointer"
                                                                aria-hidden="true"/>
                                                 </div>
 
@@ -140,8 +140,9 @@ export default function HomeView() {
                                                         navigate(`/editar-vaga/${jobVacancy.id}`);
                                                     }}
                                                 >
-                                                    <PencilSquareIcon className="h-6 w-6 text-yellow-600 cursor-pointer"
-                                                                      aria-hidden="true"/>
+                                                    <PencilSquareIcon
+                                                        className="sm:size-6 size-5 text-yellow-600 cursor-pointer"
+                                                        aria-hidden="true"/>
                                                 </div>
 
                                             </div>
