@@ -151,8 +151,9 @@ export default function HomeView() {
                                             </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
-                                            <AlertDialogCancel>Fechar</AlertDialogCancel>
-                                            <AlertDialogAction>Candidatar-se</AlertDialogAction>
+                                            <AlertDialogCancel className="cursor-pointer">Fechar</AlertDialogCancel>
+                                            <AlertDialogAction
+                                                className="bg-[#812316] hover:hover:bg-[#812316]/90 cursor-pointer font-semibold">Candidatar-se</AlertDialogAction>
                                         </AlertDialogFooter>
                                     </AlertDialogContent>
                                 </AlertDialog>

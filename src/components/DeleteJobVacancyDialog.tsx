@@ -40,8 +40,10 @@ export default function DeleteJobVacancyDialog({selectedJob, setSelectedJob, onJ
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setSelectedJob(null)}>Cancelar</AlertDialogCancel>
+                    <AlertDialogCancel className="cursor-pointer"
+                                       onClick={() => setSelectedJob(null)}>Cancelar</AlertDialogCancel>
                     <Button
+                        className="font-semibold cursor-pointer"
                         variant="destructive"
                         onClick={() => selectedJob?.id !== undefined && deleteJobVacancy(selectedJob.id)}
                     >
