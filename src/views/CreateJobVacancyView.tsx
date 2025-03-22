@@ -1,11 +1,9 @@
 import {z} from "zod";
 import {useState} from "react";
 import * as React from "react";
-import api from "../api/api.ts";
-import {AxiosError} from "axios";
-import {ApiError} from "../types/apiTypes.ts";
 import formatSalaryToInt from "../utils/formatSalaryToInt.ts";
 import {toast} from "sonner";
+import {useJobStore} from "@/store/useJobStore.ts";
 
 const createJobSchema = z.object({
     company: z
@@ -46,8 +44,8 @@ export default function CreateJobVacancyView() {
         role?: string,
         salary?: string,
     }>();
-    const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
-    const [isLoading, setIsLoading] = useState(false);
+    const {fetchCreateJobVacancy, isLoading} = useJobStore();
+
 
     const setFormValue = (ev: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({...formData, [ev.target.name]: ev.target.value});
@@ -94,34 +92,22 @@ export default function CreateJobVacancyView() {
             role: string;
             salary: number;
         }) {
-            try {
-                setIsLoading(true)
-                await api.post('/opening', formData);
+            fetchCreateJobVacancy(formData)
 
-                setFormData({
-                    company: '',
-                    link: '',
-                    location: '',
-                    remote: false,
-                    role: '',
-                    salary: '',
-                });
+            setFormData({
+                company: '',
+                link: '',
+                location: '',
+                remote: false,
+                role: '',
+                salary: '',
+            });
 
-                toast.success('Vaga cadastrada com sucesso!', {
-                    className: '!bg-green-500 !text-white !text-base',
-                    duration: 8_000
-                })
+            toast.success('Vaga cadastrada com sucesso!', {
+                className: '!bg-green-500 !text-white !text-base',
+                duration: 8_000
+            })
 
-            } catch (error) {
-                const axiosError = error as AxiosError<ApiError>;
-                setServerErrors({
-                    message: axiosError.response?.data.message || '',
-                    statusCode: axiosError.response?.data.statusCode || 0,
-                });
-            } finally {
-                setIsLoading(false)
-
-            }
         }
     };
 
@@ -254,12 +240,6 @@ export default function CreateJobVacancyView() {
 
                     </div>
                 </div>
-
-                {serverErrors && (
-                    <div className="bg-red-400 p-4 rounded-md">
-                        <p className="text-black text-sm font-semibold text-center uppercase">{serverErrors.message} ({serverErrors.statusCode})</p>
-                    </div>
-                )}
 
 
                 <div>

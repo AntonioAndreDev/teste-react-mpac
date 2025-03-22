@@ -18,6 +18,7 @@ interface JobStore {
         salary: number;
     };
     fetchEditJobVacancy: (id: number, formData: JobStore['formData']) => Promise<void>;
+    fetchCreateJobVacancy: (formData: JobStore['formData']) => Promise<void>;
 
 }
 
@@ -99,6 +100,21 @@ export const useJobStore = create<JobStore>((set) => ({
             console.error("Erro ao buscar vaga", error);
         } finally {
             console.log("Finalizando fetchEditJobVacancy...");
+            set({isLoading: false});
+        }
+    },
+
+    fetchCreateJobVacancy: async (formData: JobStore['formData']) => {
+        try {
+            console.log("Iniciando fetchCreateJobVacancy...");
+            set({isLoading: true});
+            const response = await api.post(`/opening`, formData);
+            const data = response.data.message;
+            set({jobVacancy: data});
+        } catch (error) {
+            console.error("Erro ao buscar vaga", error);
+        } finally {
+            console.log("Finalizando fetchCreateJobVacancy...");
             set({isLoading: false});
         }
     },
