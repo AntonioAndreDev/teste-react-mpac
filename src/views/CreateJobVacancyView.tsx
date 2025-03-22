@@ -6,8 +6,9 @@ import {useJobStore} from "@/store/useJobStore.ts";
 import {createOrEditJobSchema} from "@/validations/zodSchemas.ts";
 import {JobVacancyFormData, JobVacancyFormDataErrors} from "@/types/jobTypes.ts";
 
-
 export default function CreateJobVacancyView() {
+    const [formErrors, setFormErrors] = useState<JobVacancyFormDataErrors>();
+    const {fetchCreateJobVacancy, isLoading} = useJobStore();
     const [formData, setFormData] = useState({
         company: '',
         link: '',
@@ -16,8 +17,6 @@ export default function CreateJobVacancyView() {
         role: '',
         salary: '',
     });
-    const [formErrors, setFormErrors] = useState<JobVacancyFormDataErrors>();
-    const {fetchCreateJobVacancy, isLoading} = useJobStore();
 
 
     const setFormValue = (ev: React.ChangeEvent<HTMLInputElement>) => {

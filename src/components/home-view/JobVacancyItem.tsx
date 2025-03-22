@@ -18,7 +18,6 @@ import {JobVacancy} from "@/types/jobTypes.ts";
 
 export default function JobVacancyItem({jobVacancy}: { jobVacancy: JobVacancy }) {
     const {fetchJobVacancies, removeJobVacancy} = useJobStore();
-
     const [selectedJobToDelete, setSelectedJobToDelete] = useState<JobVacancy | null>(null);
     const navigate = useNavigate();
 

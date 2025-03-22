@@ -11,31 +11,10 @@ import {JobVacancyFormData, JobVacancyFormDataErrors} from "@/types/jobTypes.ts"
 
 
 export default function EditJobVacancyView() {
-    const {vagaId} = useParams()
-    const navigate = useNavigate()
     const {jobVacancy, fetchShowJobVacancy, fetchEditJobVacancy, isLoading} = useJobStore();
-
-    console.log(isLoading)
-
-
-    useEffect(() => {
-        fetchShowJobVacancy(Number(vagaId));
-    }, []);
-
-    useEffect(() => {
-        if (jobVacancy && jobVacancy.company !== undefined) {
-            setFormData({
-                company: jobVacancy.company || '',
-                link: jobVacancy.link || '',
-                location: jobVacancy.location || '',
-                remote: jobVacancy.remote || false,
-                role: jobVacancy.role || '',
-                salary: jobVacancy.salary !== undefined ? formatIntToSalary(jobVacancy.salary) : '',
-            });
-        }
-    }, [jobVacancy]);
-
-
+    const [formErrors, setFormErrors] = useState<JobVacancyFormDataErrors>();
+    const navigate = useNavigate()
+    const {vagaId} = useParams()
     const [formData, setFormData] = useState({
         company: '',
         link: '',
@@ -44,7 +23,6 @@ export default function EditJobVacancyView() {
         role: '',
         salary: '',
     });
-    const [formErrors, setFormErrors] = useState<JobVacancyFormDataErrors>();
 
     const setFormValue = (ev: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({...formData, [ev.target.name]: ev.target.value});
@@ -104,6 +82,23 @@ export default function EditJobVacancyView() {
 
         }
     };
+
+    useEffect(() => {
+        fetchShowJobVacancy(Number(vagaId));
+    }, []);
+
+    useEffect(() => {
+        if (jobVacancy && jobVacancy.company !== undefined) {
+            setFormData({
+                company: jobVacancy.company || '',
+                link: jobVacancy.link || '',
+                location: jobVacancy.location || '',
+                remote: jobVacancy.remote || false,
+                role: jobVacancy.role || '',
+                salary: jobVacancy.salary !== undefined ? formatIntToSalary(jobVacancy.salary) : '',
+            });
+        }
+    }, [jobVacancy]);
 
     if (isLoading) {
         return <EditJobLoadingSkeleton/>
