@@ -40,7 +40,6 @@ export const useJobStore = create<JobStore>((set) => ({
 
     fetchJobVacancies: async () => {
         try {
-            console.log("Iniciando fetchJobVacancies...");
             set({isLoading: true});
             const response = await api.get("/openings");
             const data = response.data.message;
@@ -48,7 +47,6 @@ export const useJobStore = create<JobStore>((set) => ({
         } catch (error) {
             console.error("Erro ao buscar vagas", error);
         } finally {
-            console.log("Finalizando fetchJobVacancies...");
             set({isLoading: false})
         }
     },
@@ -69,7 +67,6 @@ export const useJobStore = create<JobStore>((set) => ({
 
     fetchShowJobVacancy: async (id: number) => {
         try {
-            console.log("Iniciando fetchShowJobVacancy...");
             set({isLoading: true});
             const response = await api.get(`/opening?id=${id}`);
             const data = response.data.message;
@@ -77,14 +74,12 @@ export const useJobStore = create<JobStore>((set) => ({
         } catch (error) {
             console.error("Erro ao buscar vaga", error);
         } finally {
-            console.log("Finalizando fetchShowJobVacancy...");
             set({isLoading: false});
         }
     },
 
     fetchEditJobVacancy: async (id: number, formData: JobVacancyFormData) => {
         try {
-            console.log("Iniciando fetchEditJobVacancy...");
             set({isLoading: true});
             const response = await api.put(`/opening?id=${id}`, formData);
             const data = response.data.message;
@@ -92,14 +87,12 @@ export const useJobStore = create<JobStore>((set) => ({
         } catch (error) {
             console.error("Erro ao buscar vaga", error);
         } finally {
-            console.log("Finalizando fetchEditJobVacancy...");
             set({isLoading: false});
         }
     },
 
     fetchCreateJobVacancy: async (formData: JobVacancyFormData) => {
         try {
-            console.log("Iniciando fetchCreateJobVacancy...");
             set({isLoading: true});
             const response = await api.post(`/opening`, formData);
             const data = response.data.message;
@@ -107,7 +100,6 @@ export const useJobStore = create<JobStore>((set) => ({
         } catch (error) {
             console.error("Erro ao buscar vaga", error);
         } finally {
-            console.log("Finalizando fetchCreateJobVacancy...");
             set({isLoading: false});
         }
     },
