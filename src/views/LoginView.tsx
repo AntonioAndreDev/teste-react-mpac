@@ -57,6 +57,7 @@ export default function LoginView() {
 
 
                 toast.error(`Erro ${axiosError.response?.data.statusCode}: ${axiosError.response?.data.message}`, {
+                    className: '!bg-red-500 !text-white !text-base',
                     duration: 12_000
                 })
             } finally {
@@ -73,8 +74,8 @@ export default function LoginView() {
     };
 
     return (
-        <div className="bg-white w-full sm:w-1/4 mx-auto p-6 rounded-2xl shadow-xl">
-            <div className="sm:mx-auto sm:w-full sm:max-w-lg">
+        <div className="bg-white sm:p-6 p-4 rounded-2xl shadow-md sm:w-fit w-full">
+            <div className="">
                 <h2 className="text-center text-2xl font-bold tracking-tight text-gray-900">Entre na sua conta</h2>
 
                 <form className="space-y-4 mt-4" onSubmit={handleSubmission}>
@@ -142,7 +143,7 @@ export default function LoginView() {
                     <div className="flex-grow border-t border-gray-200"></div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid sm:grid-cols-2 gap-4">
                     <div
                         className="flex border border-gray-200 w-full gap-x-4 items-center justify-center rounded-md py-3 px-12 cursor-pointer">
                         <img src="/assets/google.png" alt="Google logo"/>
