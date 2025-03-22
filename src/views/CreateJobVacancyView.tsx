@@ -1,32 +1,10 @@
-import {z} from "zod";
 import {useState} from "react";
 import * as React from "react";
 import formatSalaryToInt from "../utils/formatSalaryToInt.ts";
 import {toast} from "sonner";
 import {useJobStore} from "@/store/useJobStore.ts";
+import {createOrEditJobSchema} from "@/validations/zodSchemas.ts";
 
-const createJobSchema = z.object({
-    company: z
-        .string()
-        .min(3, {message: 'O nome da empresa precisa ter pelo menos 3 caracteres.'})
-        .max(50, {message: 'O nome da empresa pode ter no máximo 50 caracteres.'}),
-    link: z
-        .string()
-        .url({message: 'Por favor, insira um link válido.'}),
-    location: z
-        .string()
-        .min(3, {message: 'O local precisa ter pelo menos 3 caracteres.'})
-        .max(50, {message: 'O local pode ter no máximo 50 caracteres.'}),
-    remote: z.boolean(),
-    role: z
-        .string()
-        .min(3, {message: 'O cargo precisa ter pelo menos 3 caracteres.'})
-        .max(50, {message: 'O cargo pode ter no máximo 50 caracteres.'}),
-    salary: z
-        .string()
-        .min(3, {message: 'O salário precisa ter pelo menos 3 caracteres.'})
-        .max(50, {message: 'O salário pode ter no máximo 50 caracteres.'}),
-});
 
 export default function CreateJobVacancyView() {
     const [formData, setFormData] = useState({
@@ -54,7 +32,7 @@ export default function CreateJobVacancyView() {
     const handleSubmission = async (ev: React.FormEvent) => {
         ev.preventDefault();
 
-        const zodSchemaResult = createJobSchema.safeParse(formData);
+        const zodSchemaResult = createOrEditJobSchema.safeParse(formData);
 
         if (zodSchemaResult.success) {
             setFormErrors(
