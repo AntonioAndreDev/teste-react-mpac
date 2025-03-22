@@ -6,8 +6,8 @@ import {
     XMarkIcon,
 } from '@heroicons/react/24/outline'
 import {Toaster} from "@/components/ui/sonner.tsx";
-import DesktopNav from "@/components/layouts/only-authenticate-layout/DesktopNav.tsx";
-import MobileNav from "@/components/layouts/only-authenticate-layout/MobileNav.tsx";
+import DesktopNav from "@/components/layouts/only-authenticate-layout/navigation/DesktopNav.tsx";
+import MobileNav from "@/components/layouts/only-authenticate-layout/navigation/MobileNav.tsx";
 
 
 const isTokenExpired = (token: string) => {
