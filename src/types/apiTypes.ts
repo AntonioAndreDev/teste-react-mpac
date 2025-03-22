@@ -10,7 +10,7 @@ export interface JobVacancy {
     location: string;
     remote: boolean;
     link: string;
-    salary: string;
+    salary: number;
     created_at: string;
     updated_at: string;
 }

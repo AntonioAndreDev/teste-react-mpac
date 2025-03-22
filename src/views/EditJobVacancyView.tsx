@@ -1,10 +1,12 @@
 import {z} from "zod";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import * as React from "react";
 import api from "../api/api.ts";
 import {AxiosError} from "axios";
 import {ApiError} from "../types/apiTypes.ts";
 import formatSalaryToInt from "../utils/formatSalaryToInt.ts";
+import {useNavigate, useParams} from "react-router";
+import formatIntToSalary from "@/utils/formatIntToSalary.ts";
 import {toast} from "sonner";
 
 const createJobSchema = z.object({
@@ -30,7 +32,36 @@ const createJobSchema = z.object({
         .max(50, {message: 'O salário pode ter no máximo 50 caracteres.'}),
 });
 
-export default function CreateJobVacancyView() {
+export default function EditJobVacancyView() {
+    const {vagaId} = useParams()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        async function showJobVacancy() {
+            try {
+                const response = await api.get(`/opening?id=${vagaId}`);
+                const job = response.data.message;
+
+                setFormData({
+                    company: job.company,
+                    link: job.link,
+                    location: job.location,
+                    remote: job.remote,
+                    role: job.role,
+                    salary: formatIntToSalary(job.salary),
+                });
+            } catch (error) {
+                const axiosError = error as AxiosError<ApiError>;
+                setServerErrors({
+                    message: axiosError.response?.data.message || '',
+                    statusCode: axiosError.response?.data.statusCode || 0,
+                });
+            }
+        }
+
+        showJobVacancy()
+    }, [vagaId])
+
     const [formData, setFormData] = useState({
         company: '',
         link: '',
@@ -94,7 +125,7 @@ export default function CreateJobVacancyView() {
             salary: number;
         }) {
             try {
-                await api.post('/opening', formData);
+                await api.put(`/opening?id=${vagaId}`, formData);
 
                 setFormData({
                     company: '',
@@ -105,7 +136,8 @@ export default function CreateJobVacancyView() {
                     salary: '',
                 });
 
-                toast.success('Vaga cadastrada com sucesso!', {
+                navigate('/')
+                toast.success('Vaga editada com sucesso!', {
                     className: '!bg-green-500 !text-white !text-base',
                     duration: 8_000
                 })
@@ -122,7 +154,7 @@ export default function CreateJobVacancyView() {
 
     return (
         <div>
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900">Criar uma vaga</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900">Editar uma vaga</h2>
 
             <form className="space-y-4 mt-4" onSubmit={handleSubmission}>
                 <div>
@@ -250,13 +282,12 @@ export default function CreateJobVacancyView() {
                     </div>
                 )}
 
-
                 <div>
                     <button
                         type="submit"
                         className="flex cursor-pointer w-full justify-center rounded-md bg-[#812316] p-3 text-sm font-semibold text-white shadow-xs hover:bg-[#812316]/90 focus-visible:outline-2 focus-visible:outline-[#812316]"
                     >
-                        Cadastrar vaga
+                        Editar vaga
                     </button>
                 </div>
             </form>

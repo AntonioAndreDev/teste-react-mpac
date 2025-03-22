@@ -7,17 +7,16 @@ import {Fragment, useState} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 import {
     Bars3Icon,
-    DocumentDuplicateIcon,
     HomeIcon,
     XMarkIcon,
     PlusIcon,
     ArrowLeftEndOnRectangleIcon
 } from '@heroicons/react/24/outline'
+import {Toaster} from "@/components/ui/sonner.tsx";
 
 const navigation = [
     {name: 'Ver todas as vagas', href: '/', icon: HomeIcon},
     {name: 'Criar uma vaga', href: '/criar-vaga', icon: PlusIcon},
-    {name: 'Excluir uma vaga', href: '/excluir-vaga', icon: DocumentDuplicateIcon},
 ]
 
 
@@ -243,6 +242,8 @@ export default function OnlyAuthenticateLayout() {
                         <Outlet/>
                     </div>
                 </main>
+
+                <Toaster/>
             </div>
         </>
     )
