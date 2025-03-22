@@ -9,28 +9,19 @@ import {
 } from "@/components/ui/alert-dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {JobVacancy} from "@/types/apiTypes.ts";
-import api from "@/api/api.ts";
-import {toast} from "sonner";
 
-export default function DeleteJobVacancyDialog({selectedJobToDelete, setSelectedJobToDelete, onJobVacancyDeleted}: {
-    selectedJobToDelete: JobVacancy | null,
-    setSelectedJobToDelete: (job: JobVacancy | null) => void
-    onJobVacancyDeleted: (data: boolean) => Promise<void>
+export default function DeleteJobVacancyDialog({
+                                                   selectedJobToDelete,
+                                                   onJobVacancyDeleted
+                                               }: {
+    selectedJobToDelete: JobVacancy | null;
+    onJobVacancyDeleted: (id: number) => void;
 }) {
+    if (!selectedJobToDelete) return null;
 
-    async function deleteJobVacancyRequest(id: number) {
-        try {
-            await api.delete(`/opening?id=${id}`);
-            setSelectedJobToDelete(null);
-            toast.success('Vaga apagada com sucesso!', {
-                className: '!bg-green-500 !text-white !text-base',
-                duration: 8_000
-            })
-            await onJobVacancyDeleted(true);
-        } catch (error) {
-            console.error("Erro ao deletar vaga", error);
-        }
-    }
+    const handleDelete = () => {
+        onJobVacancyDeleted(selectedJobToDelete.id);
+    };
 
     return (
         <AlertDialog open={!!selectedJobToDelete}>
@@ -44,12 +35,11 @@ export default function DeleteJobVacancyDialog({selectedJobToDelete, setSelected
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel className="cursor-pointer"
-                                       onClick={() => setSelectedJobToDelete(null)}>Cancelar</AlertDialogCancel>
+                    <AlertDialogCancel className="cursor-pointer">Cancelar</AlertDialogCancel>
                     <Button
                         className="font-semibold cursor-pointer"
                         variant="destructive"
-                        onClick={() => selectedJobToDelete?.id !== undefined && deleteJobVacancyRequest(selectedJobToDelete.id)}
+                        onClick={handleDelete}
                     >
                         Apagar
                     </Button>

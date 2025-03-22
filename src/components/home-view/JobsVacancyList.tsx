@@ -11,42 +11,42 @@ import formatIntToSalary from "@/utils/formatIntToSalary.ts";
 import {formatDateToPtBr} from "@/utils/formateDateToPtBr.ts";
 import {useNavigate} from "react-router";
 import DeleteJobVacancyDialog from "@/components/home-view/DeleteJobVacancyDialog.tsx";
-import {useState} from "react";
-import api from "@/api/api.ts";
+import {useEffect, useState} from "react";
 import HomeLoadingSkeleton from "@/components/home-view/loading-structures/HomeLoadingSkeleton.tsx";
+import {useJobStore} from "@/store/useJobStore.ts";
+import EmptyJobVacancy from "@/components/home-view/EmptyJobVacancy.tsx";
 
-export default function JobsVacancyList({jobVacancies}: {
-    jobVacancies: JobVacancy[],
-}) {
-    const navigate = useNavigate();
+export default function JobsVacancyList() {
+    const {jobVacancies, fetchJobVacancies, isLoading, removeJobVacancy} = useJobStore();
     const [selectedJobToDelete, setSelectedJobToDelete] = useState<JobVacancy | null>(null);
-    const [jobVacanciesState, setJobVacanciesState] = useState(jobVacancies);
-    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
-    async function onJobVacancyDeleted(data: boolean) {
-        if (data) {
-            try {
-                setIsLoading(true)
-                const response = await api.get('/openings');
-                setJobVacanciesState(response.data.message);
-            } catch (error) {
-                console.error("Erro ao atualizar vagas", error);
-            } finally {
-                setIsLoading(false)
-            }
-        }
-    }
+    useEffect(() => {
+        fetchJobVacancies();
+    }, []);
+
+    const handleJobVacancyDeleted = async (id: number) => {
+        await removeJobVacancy(id);
+        await fetchJobVacancies();
+        setSelectedJobToDelete(null);
+    };
 
     if (isLoading) {
-        return (
-            <HomeLoadingSkeleton/>
-        )
+        return <HomeLoadingSkeleton/>;
+    }
+
+
+    if (jobVacancies.length === 0) {
+        return <EmptyJobVacancy/>
+
     }
 
     return (
         <>
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900">Lista de Vagas</h2>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
-                {jobVacanciesState.map((jobVacancy: JobVacancy) => (
+                {jobVacancies.map((jobVacancy: JobVacancy) => (
                     <AlertDialog key={jobVacancy.id}>
                         <AlertDialogTrigger
                             className="flex flex-col border-2 border-gray-200 rounded-lg p-6 bg-white hover:border-[#812316] cursor-pointer transition-all duration-200"
@@ -57,7 +57,7 @@ export default function JobsVacancyList({jobVacancies}: {
                                     <div
                                         onClick={(ev) => {
                                             ev.stopPropagation();
-                                            setSelectedJobToDelete(jobVacancy)
+                                            setSelectedJobToDelete(jobVacancy);
                                         }}
                                     >
                                         <TrashIcon className="sm:size-6 size-5 text-red-600 cursor-pointer"
@@ -70,13 +70,10 @@ export default function JobsVacancyList({jobVacancies}: {
                                             navigate(`/editar-vaga/${jobVacancy.id}`);
                                         }}
                                     >
-                                        <PencilSquareIcon
-                                            className="sm:size-6 size-5 text-yellow-600 cursor-pointer"
-                                            aria-hidden="true"/>
+                                        <PencilSquareIcon className="sm:size-6 size-5 text-yellow-600 cursor-pointer"
+                                                          aria-hidden="true"/>
                                     </div>
-
                                 </div>
-
                             </div>
                             <p className="text-sm text-start text-gray-500 mt-1">Empresa: {jobVacancy.company}</p>
                             <p className="text-sm text-start text-gray-500 mt-1">Localização: {jobVacancy.location}</p>
@@ -87,34 +84,25 @@ export default function JobsVacancyList({jobVacancies}: {
                                     {jobVacancy.role}
                                 </AlertDialogTitle>
                                 <AlertDialogDescription className="flex flex-col gap-y-1">
-                                                <span
-                                                    className="text-base text-gray-500"
-                                                >
-                                                    <strong>Empresa</strong>: {jobVacancy.company}
-                                                </span>
+                                    <span className="text-base text-gray-500">
+                                        <strong>Empresa</strong>: {jobVacancy.company}
+                                    </span>
 
-                                    <span
-                                        className="text-base text-gray-500"
-                                    >
-                                                    <strong>Localização</strong>: {jobVacancy.location}
-                                                </span>
-                                    <span
-                                        className="text-base text-gray-500"
-                                    >
-                                                    <strong>Salário (Bruto)</strong>: R${formatIntToSalary(jobVacancy.salary)}
-                                                </span>
-                                    <span
-                                        className="text-base text-gray-500"
-                                    >
-                                                    <strong>Modalidade</strong>: {jobVacancy.remote ? 'Remoto' : 'Presencial'}
-                                                </span>
+                                    <span className="text-base text-gray-500">
+                                        <strong>Localização</strong>: {jobVacancy.location}
+                                    </span>
 
-                                    <span
-                                        className="text-base text-gray-500"
-                                    >
-                                                    <strong>Vaga criada em</strong>: {formatDateToPtBr(jobVacancy.created_at)}
-                                                </span>
+                                    <span className="text-base text-gray-500">
+                                        <strong>Salário (Bruto)</strong>: R${formatIntToSalary(jobVacancy.salary)}
+                                    </span>
 
+                                    <span className="text-base text-gray-500">
+                                        <strong>Modalidade</strong>: {jobVacancy.remote ? 'Remoto' : 'Presencial'}
+                                    </span>
+
+                                    <span className="text-base text-gray-500">
+                                        <strong>Vaga criada em</strong>: {formatDateToPtBr(jobVacancy.created_at)}
+                                    </span>
 
                                     <a target="_blank" referrerPolicy="no-referrer"
                                        className="text-base text-gray-500 underline italic"
@@ -127,19 +115,22 @@ export default function JobsVacancyList({jobVacancies}: {
                             <AlertDialogFooter>
                                 <AlertDialogCancel className="cursor-pointer">Fechar</AlertDialogCancel>
                                 <AlertDialogAction
-                                    className="bg-[#812316] hover:hover:bg-[#812316]/90 cursor-pointer font-semibold">Candidatar-se</AlertDialogAction>
+                                    className="bg-[#812316] hover:hover:bg-[#812316]/90 cursor-pointer font-semibold">
+                                    Candidatar-se
+                                </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
-
                 ))}
             </div>
 
-            {selectedJobToDelete &&
-							<DeleteJobVacancyDialog selectedJobToDelete={selectedJobToDelete}
-							                        setSelectedJobToDelete={setSelectedJobToDelete}
-							                        onJobVacancyDeleted={onJobVacancyDeleted}/>}
+            {selectedJobToDelete && (
+                <DeleteJobVacancyDialog
+                    selectedJobToDelete={selectedJobToDelete}
+                    onJobVacancyDeleted={handleJobVacancyDeleted}
+                />
+            )}
         </>
-
-    )
+    );
 }
+
