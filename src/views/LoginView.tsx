@@ -18,6 +18,7 @@ const loginSchema = z.object({
 export default function LoginView() {
     const [formData, setFormData] = useState({email: '', password: ''});
     const [formErrors, setFormErrors] = useState<{ email?: string, password?: string }>();
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmission = async (ev: React.FormEvent) => {
@@ -47,6 +48,7 @@ export default function LoginView() {
 
         async function loginRequest(email: string, password: string) {
             try {
+                setIsLoading(true)
                 const response = await api.post('/login', {email, password});
                 localStorage.setItem('token', response.data.message);
                 navigate('/');
@@ -57,6 +59,8 @@ export default function LoginView() {
                 toast.error(`Erro ${axiosError.response?.data.statusCode}: ${axiosError.response?.data.message}`, {
                     duration: 12_000
                 })
+            } finally {
+                setIsLoading(false)
             }
         }
     }
@@ -84,7 +88,8 @@ export default function LoginView() {
                                 autoComplete="email"
                                 value={formData.email}
                                 onChange={setFormValue}
-                                className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                                disabled={isLoading}
+                                className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                             />
                         </div>
                         {formErrors?.email && (
@@ -105,7 +110,8 @@ export default function LoginView() {
                                 autoComplete="current-password"
                                 value={formData.password}
                                 onChange={setFormValue}
-                                className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                                disabled={isLoading}
+                                className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                             />
                         </div>
                         {formErrors?.password && (
@@ -122,7 +128,8 @@ export default function LoginView() {
                     <div>
                         <button
                             type="submit"
-                            className="flex cursor-pointer w-full justify-center rounded-md bg-[#812316] p-3 text-sm font-semibold text-white shadow-xs hover:bg-[#812316]/90 focus-visible:outline-2 focus-visible:outline-[#812316]"
+                            disabled={isLoading}
+                            className="flex cursor-pointer w-full justify-center rounded-md bg-[#812316] p-3 text-sm font-semibold text-white shadow-xs hover:bg-[#812316]/90 focus-visible:outline-2 focus-visible:outline-[#812316] disabled:bg-[#812316]/50 disabled:cursor-progress"
                         >
                             Entrar agora
                         </button>

@@ -47,6 +47,7 @@ export default function CreateJobVacancyView() {
         salary?: string,
     }>();
     const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
+    const [isLoading, setIsLoading] = useState(false);
 
     const setFormValue = (ev: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({...formData, [ev.target.name]: ev.target.value});
@@ -94,6 +95,7 @@ export default function CreateJobVacancyView() {
             salary: number;
         }) {
             try {
+                setIsLoading(true)
                 await api.post('/opening', formData);
 
                 setFormData({
@@ -116,6 +118,9 @@ export default function CreateJobVacancyView() {
                     message: axiosError.response?.data.message || '',
                     statusCode: axiosError.response?.data.statusCode || 0,
                 });
+            } finally {
+                setIsLoading(false)
+
             }
         }
     };
@@ -134,7 +139,8 @@ export default function CreateJobVacancyView() {
                             id="company"
                             value={formData.company}
                             onChange={setFormValue}
-                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                            disabled={isLoading}
+                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                         />
                     </div>
                     {formErrors?.company && (
@@ -154,7 +160,8 @@ export default function CreateJobVacancyView() {
                             id="link"
                             value={formData.link}
                             onChange={setFormValue}
-                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                            disabled={isLoading}
+                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                         />
                     </div>
                     {formErrors?.link && (
@@ -174,7 +181,8 @@ export default function CreateJobVacancyView() {
                             id="location"
                             value={formData.location}
                             onChange={setFormValue}
-                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                            disabled={isLoading}
+                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                         />
                     </div>
                     {formErrors?.location && (
@@ -194,7 +202,8 @@ export default function CreateJobVacancyView() {
                             id="role"
                             value={formData.role}
                             onChange={setFormValue}
-                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                            disabled={isLoading}
+                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                         />
                     </div>
                     {formErrors?.role && (
@@ -214,7 +223,8 @@ export default function CreateJobVacancyView() {
                             id="salary"
                             value={formData.salary}
                             onChange={setFormValue}
-                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                            disabled={isLoading}
+                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                         />
                     </div>
                     {formErrors?.salary && (
@@ -233,7 +243,8 @@ export default function CreateJobVacancyView() {
                             id="remote"
                             checked={formData.remote}
                             onChange={(ev) => setFormData({...formData, remote: ev.target.checked})}
-                            className="peer hidden"
+                            disabled={isLoading}
+                            className="peer hidden disabled:opacity-50"
                         />
                         <label
                             htmlFor="remote"
@@ -253,8 +264,9 @@ export default function CreateJobVacancyView() {
 
                 <div>
                     <button
+                        disabled={isLoading}
                         type="submit"
-                        className="flex cursor-pointer w-full justify-center rounded-md bg-[#812316] p-3 text-sm font-semibold text-white shadow-xs hover:bg-[#812316]/90 focus-visible:outline-2 focus-visible:outline-[#812316]"
+                        className="flex cursor-pointer w-full justify-center rounded-md bg-[#812316] p-3 text-sm font-semibold text-white shadow-xs hover:bg-[#812316]/90 focus-visible:outline-2 focus-visible:outline-[#812316] disabled:bg-[#812316]/50 disabled:cursor-progress"
                     >
                         Cadastrar vaga
                     </button>

@@ -35,10 +35,12 @@ const createJobSchema = z.object({
 export default function EditJobVacancyView() {
     const {vagaId} = useParams()
     const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         async function showJobVacancy() {
             try {
+                setIsLoading(true)
                 const response = await api.get(`/opening?id=${vagaId}`);
                 const job = response.data.message;
 
@@ -56,6 +58,8 @@ export default function EditJobVacancyView() {
                     message: axiosError.response?.data.message || '',
                     statusCode: axiosError.response?.data.statusCode || 0,
                 });
+            } finally {
+                setIsLoading(false)
             }
         }
 
@@ -125,6 +129,7 @@ export default function EditJobVacancyView() {
             salary: number;
         }) {
             try {
+                setIsLoading(true)
                 await api.put(`/opening?id=${vagaId}`, formData);
 
                 setFormData({
@@ -148,6 +153,8 @@ export default function EditJobVacancyView() {
                     message: axiosError.response?.data.message || '',
                     statusCode: axiosError.response?.data.statusCode || 0,
                 });
+            } finally {
+                setIsLoading(false)
             }
         }
     };
@@ -166,7 +173,8 @@ export default function EditJobVacancyView() {
                             id="company"
                             value={formData.company}
                             onChange={setFormValue}
-                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                            disabled={isLoading}
+                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                         />
                     </div>
                     {formErrors?.company && (
@@ -186,7 +194,8 @@ export default function EditJobVacancyView() {
                             id="link"
                             value={formData.link}
                             onChange={setFormValue}
-                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                            disabled={isLoading}
+                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                         />
                     </div>
                     {formErrors?.link && (
@@ -206,7 +215,8 @@ export default function EditJobVacancyView() {
                             id="location"
                             value={formData.location}
                             onChange={setFormValue}
-                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                            disabled={isLoading}
+                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                         />
                     </div>
                     {formErrors?.location && (
@@ -226,7 +236,8 @@ export default function EditJobVacancyView() {
                             id="role"
                             value={formData.role}
                             onChange={setFormValue}
-                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                            disabled={isLoading}
+                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                         />
                     </div>
                     {formErrors?.role && (
@@ -246,7 +257,8 @@ export default function EditJobVacancyView() {
                             id="salary"
                             value={formData.salary}
                             onChange={setFormValue}
-                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm"
+                            disabled={isLoading}
+                            className="block w-full rounded-md bg-white p-3 text-base text-gray-900 outline-1 outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-[#812316] sm:text-sm disabled:opacity-50"
                         />
                     </div>
                     {formErrors?.salary && (
@@ -265,6 +277,7 @@ export default function EditJobVacancyView() {
                             id="remote"
                             checked={formData.remote}
                             onChange={(ev) => setFormData({...formData, remote: ev.target.checked})}
+                            disabled={isLoading}
                             className="peer hidden"
                         />
                         <label
@@ -284,8 +297,9 @@ export default function EditJobVacancyView() {
 
                 <div>
                     <button
+                        disabled={isLoading}
                         type="submit"
-                        className="flex cursor-pointer w-full justify-center rounded-md bg-[#812316] p-3 text-sm font-semibold text-white shadow-xs hover:bg-[#812316]/90 focus-visible:outline-2 focus-visible:outline-[#812316]"
+                        className="flex cursor-pointer w-full justify-center rounded-md bg-[#812316] p-3 text-sm font-semibold text-white shadow-xs hover:bg-[#812316]/90 focus-visible:outline-2 focus-visible:outline-[#812316] disabled:bg-[#812316]/50 disabled:cursor-progress"
                     >
                         Editar vaga
                     </button>
