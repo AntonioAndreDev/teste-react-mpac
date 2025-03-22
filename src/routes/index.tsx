@@ -5,6 +5,7 @@ import OnlyAuthenticateLayout from "../layouts/OnlyAuthenticateLayout.tsx";
 import OnlyGuestLayout from "../layouts/OnlyGuestLayout.tsx";
 import CreateJobVacancyView from "../views/CreateJobVacancyView.tsx";
 import HomeView from "../views/HomeView.tsx";
+import EditJobVacancyView from "@/views/EditJobVacancyView.tsx";
 
 const RoutesConfig = (
     <Routes>
@@ -19,6 +20,9 @@ const RoutesConfig = (
             <Route index element={<HomeView/>}/>
 
             <Route path={"criar-vaga"} element={<CreateJobVacancyView/>}/>
+
+            <Route path={"editar-vaga/:vagaId"} element={<EditJobVacancyView/>}/>
+
         </Route>
 
 

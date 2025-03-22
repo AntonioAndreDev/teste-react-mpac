@@ -11,8 +11,8 @@ import {Button} from "@/components/ui/button.tsx";
 import {JobVacancy} from "@/types/apiTypes.ts";
 import api from "@/api/api.ts";
 
-export default function DeleteJobVacancyDialog({selectedJob, setSelectedJob, onJobVacancyDeleted}: {
-    selectedJob: JobVacancy | null,
+export default function DeleteJobVacancyDialog({selectedJobToDelete, setSelectedJob, onJobVacancyDeleted}: {
+    selectedJobToDelete: JobVacancy | null,
     setSelectedJob: (job: JobVacancy | null) => void
     onJobVacancyDeleted: (data: boolean) => Promise<void>
 }) {
@@ -29,11 +29,11 @@ export default function DeleteJobVacancyDialog({selectedJob, setSelectedJob, onJ
     }
 
     return (
-        <AlertDialog open={!!selectedJob}>
+        <AlertDialog open={!!selectedJobToDelete}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>
-                        Realmente deseja deletar {selectedJob?.role} - {selectedJob?.company}?
+                        Realmente deseja deletar {selectedJobToDelete?.role} - {selectedJobToDelete?.company}?
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-base text-gray-500">
                         Essa ação não poderá ser desfeita.
@@ -45,7 +45,7 @@ export default function DeleteJobVacancyDialog({selectedJob, setSelectedJob, onJ
                     <Button
                         className="font-semibold cursor-pointer"
                         variant="destructive"
-                        onClick={() => selectedJob?.id !== undefined && deleteJobVacancy(selectedJob.id)}
+                        onClick={() => selectedJobToDelete?.id !== undefined && deleteJobVacancy(selectedJobToDelete.id)}
                     >
                         Apagar
                     </Button>

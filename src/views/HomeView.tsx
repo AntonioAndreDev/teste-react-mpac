@@ -8,7 +8,7 @@ import {useEffect, useState} from "react";
 import api from "../api/api.ts";
 import {AxiosError} from "axios";
 import {ApiError, JobVacancy} from "../types/apiTypes.ts";
-import {Link} from "react-router";
+import {Link, useNavigate} from "react-router";
 import {
     AlertDialog, AlertDialogAction, AlertDialogCancel,
     AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
@@ -16,13 +16,14 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog.tsx";
-import {TrashIcon} from '@heroicons/react/24/outline'
+import {TrashIcon, PencilSquareIcon} from '@heroicons/react/24/outline'
 import formatIntToSalary from "@/utils/formatIntToSalary.ts";
 import {formatDateToPtBr} from "@/utils/formateDateToPtBr.ts";
 
 export default function HomeView() {
     const [jobVacancies, setJobVacancies] = useState([]);
-    const [selectedJob, setSelectedJob] = useState<JobVacancy | null>(null);
+    const [selectedJobToDelete, setSelectedJob] = useState<JobVacancy | null>(null);
+    const navigate = useNavigate();
 
     // const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
 
@@ -93,14 +94,27 @@ export default function HomeView() {
                                     >
                                         <div className="flex justify-between w-full">
                                             <h3 className="text-lg font-semibold text-gray-900">{jobVacancy.role}</h3>
-                                            <div
-                                                onClick={(ev) => {
-                                                    ev.stopPropagation();
-                                                    setSelectedJob(jobVacancy);
-                                                }}
-                                            >
-                                                <TrashIcon className="h-6 w-6 text-red-600 cursor-pointer"
-                                                           aria-hidden="true"/>
+                                            <div className="flex gap-x-4">
+                                                <div
+                                                    onClick={(ev) => {
+                                                        ev.stopPropagation();
+                                                        setSelectedJob(jobVacancy);
+                                                    }}
+                                                >
+                                                    <TrashIcon className="h-6 w-6 text-red-600 cursor-pointer"
+                                                               aria-hidden="true"/>
+                                                </div>
+
+                                                <div
+                                                    onClick={(ev) => {
+                                                        ev.stopPropagation();
+                                                        navigate(`/editar-vaga/${jobVacancy.id}`);
+                                                    }}
+                                                >
+                                                    <PencilSquareIcon className="h-6 w-6 text-yellow-600 cursor-pointer"
+                                                                      aria-hidden="true"/>
+                                                </div>
+
                                             </div>
 
                                         </div>
@@ -165,9 +179,10 @@ export default function HomeView() {
             )}
 
 
-            {selectedJob &&
-							<DeleteJobVacancyDialog selectedJob={selectedJob} setSelectedJob={setSelectedJob}
+            {selectedJobToDelete &&
+							<DeleteJobVacancyDialog selectedJobToDelete={selectedJobToDelete} setSelectedJob={setSelectedJob}
 							                        onJobVacancyDeleted={onJobVacancyDeleted}/>}
+
 
         </>
     )
