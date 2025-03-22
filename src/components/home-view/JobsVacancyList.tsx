@@ -10,106 +10,135 @@ import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
 import formatIntToSalary from "@/utils/formatIntToSalary.ts";
 import {formatDateToPtBr} from "@/utils/formateDateToPtBr.ts";
 import {useNavigate} from "react-router";
+import DeleteJobVacancyDialog from "@/components/home-view/DeleteJobVacancyDialog.tsx";
+import {useState} from "react";
+import api from "@/api/api.ts";
+import HomeLoadingSkeleton from "@/components/home-view/loading-structures/HomeLoadingSkeleton.tsx";
 
-export default function JobsVacancyList({jobVacancies, onSelectJobToDelete}: {
+export default function JobsVacancyList({jobVacancies}: {
     jobVacancies: JobVacancy[],
-    onSelectJobToDelete?: (job: JobVacancy) => void
 }) {
     const navigate = useNavigate();
-    
+    const [selectedJobToDelete, setSelectedJob] = useState<JobVacancy | null>(null);
+    const [jobVacanciesState, setJobVacanciesState] = useState(jobVacancies);
+    const [isLoading, setIsLoading] = useState(false);
+
+    async function onJobVacancyDeleted(data: boolean) {
+        if (data) {
+            try {
+                setIsLoading(true)
+                const response = await api.get('/openings');
+                setJobVacanciesState(response.data.message);
+            } catch (error) {
+                console.error("Erro ao atualizar vagas", error);
+            } finally {
+                setIsLoading(false)
+            }
+        }
+    }
+
+    if (isLoading) {
+        return (
+            <HomeLoadingSkeleton/>
+        )
+    }
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
-            {jobVacancies.map((jobVacancy: JobVacancy) => (
-                <AlertDialog key={jobVacancy.id}>
-                    <AlertDialogTrigger
-                        className="flex flex-col border-2 border-gray-200 rounded-lg p-6 bg-white hover:border-[#812316] cursor-pointer transition-all duration-200"
-                    >
-                        <div className="flex justify-between items-center gap-1 flex-wrap w-full">
-                            <h3 className="text-lg font-semibold text-start text-gray-900">{jobVacancy.role}</h3>
-                            <div className="flex gap-x-4">
-                                <div
-                                    onClick={(ev) => {
-                                        ev.stopPropagation();
-                                        if (onSelectJobToDelete) {
-                                            onSelectJobToDelete(jobVacancy);
-                                        }
-                                    }}
-                                >
-                                    <TrashIcon className="sm:size-6 size-5 text-red-600 cursor-pointer"
-                                               aria-hidden="true"/>
-                                </div>
+        <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+                {jobVacanciesState.map((jobVacancy: JobVacancy) => (
+                    <AlertDialog key={jobVacancy.id}>
+                        <AlertDialogTrigger
+                            className="flex flex-col border-2 border-gray-200 rounded-lg p-6 bg-white hover:border-[#812316] cursor-pointer transition-all duration-200"
+                        >
+                            <div className="flex justify-between items-center gap-1 flex-wrap w-full">
+                                <h3 className="text-lg font-semibold text-start text-gray-900">{jobVacancy.role}</h3>
+                                <div className="flex gap-x-4">
+                                    <div
+                                        onClick={(ev) => {
+                                            ev.stopPropagation();
+                                            setSelectedJob(jobVacancy)
+                                        }}
+                                    >
+                                        <TrashIcon className="sm:size-6 size-5 text-red-600 cursor-pointer"
+                                                   aria-hidden="true"/>
+                                    </div>
 
-                                <div
-                                    onClick={(ev) => {
-                                        ev.stopPropagation();
-                                        navigate(`/editar-vaga/${jobVacancy.id}`);
-                                    }}
-                                >
-                                    <PencilSquareIcon
-                                        className="sm:size-6 size-5 text-yellow-600 cursor-pointer"
-                                        aria-hidden="true"/>
+                                    <div
+                                        onClick={(ev) => {
+                                            ev.stopPropagation();
+                                            navigate(`/editar-vaga/${jobVacancy.id}`);
+                                        }}
+                                    >
+                                        <PencilSquareIcon
+                                            className="sm:size-6 size-5 text-yellow-600 cursor-pointer"
+                                            aria-hidden="true"/>
+                                    </div>
+
                                 </div>
 
                             </div>
-
-                        </div>
-                        <p className="text-sm text-start text-gray-500 mt-1">Empresa: {jobVacancy.company}</p>
-                        <p className="text-sm text-start text-gray-500 mt-1">Localização: {jobVacancy.location}</p>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle className="text-xl">
-                                {jobVacancy.role}
-                            </AlertDialogTitle>
-                            <AlertDialogDescription className="flex flex-col gap-y-1">
+                            <p className="text-sm text-start text-gray-500 mt-1">Empresa: {jobVacancy.company}</p>
+                            <p className="text-sm text-start text-gray-500 mt-1">Localização: {jobVacancy.location}</p>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle className="text-xl">
+                                    {jobVacancy.role}
+                                </AlertDialogTitle>
+                                <AlertDialogDescription className="flex flex-col gap-y-1">
                                                 <span
                                                     className="text-base text-gray-500"
                                                 >
                                                     <strong>Empresa</strong>: {jobVacancy.company}
                                                 </span>
 
-                                <span
-                                    className="text-base text-gray-500"
-                                >
+                                    <span
+                                        className="text-base text-gray-500"
+                                    >
                                                     <strong>Localização</strong>: {jobVacancy.location}
                                                 </span>
-                                <span
-                                    className="text-base text-gray-500"
-                                >
+                                    <span
+                                        className="text-base text-gray-500"
+                                    >
                                                     <strong>Salário (Bruto)</strong>: R${formatIntToSalary(jobVacancy.salary)}
                                                 </span>
-                                <span
-                                    className="text-base text-gray-500"
-                                >
+                                    <span
+                                        className="text-base text-gray-500"
+                                    >
                                                     <strong>Modalidade</strong>: {jobVacancy.remote ? 'Remoto' : 'Presencial'}
                                                 </span>
 
-                                <span
-                                    className="text-base text-gray-500"
-                                >
+                                    <span
+                                        className="text-base text-gray-500"
+                                    >
                                                     <strong>Vaga criada em</strong>: {formatDateToPtBr(jobVacancy.created_at)}
                                                 </span>
 
 
-                                <a target="_blank" referrerPolicy="no-referrer"
-                                   className="text-base text-gray-500 underline italic"
-                                   href={jobVacancy.link}
-                                >
-                                    Saiba mais
-                                </a>
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel className="cursor-pointer">Fechar</AlertDialogCancel>
-                            <AlertDialogAction
-                                className="bg-[#812316] hover:hover:bg-[#812316]/90 cursor-pointer font-semibold">Candidatar-se</AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
+                                    <a target="_blank" referrerPolicy="no-referrer"
+                                       className="text-base text-gray-500 underline italic"
+                                       href={jobVacancy.link}
+                                    >
+                                        Saiba mais
+                                    </a>
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className="cursor-pointer">Fechar</AlertDialogCancel>
+                                <AlertDialogAction
+                                    className="bg-[#812316] hover:hover:bg-[#812316]/90 cursor-pointer font-semibold">Candidatar-se</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
 
-            ))}
-        </div>
+                ))}
+            </div>
+
+            {selectedJobToDelete &&
+							<DeleteJobVacancyDialog selectedJobToDelete={selectedJobToDelete} setSelectedJob={setSelectedJob}
+							                        onJobVacancyDeleted={onJobVacancyDeleted}/>}
+        </>
 
     )
 }

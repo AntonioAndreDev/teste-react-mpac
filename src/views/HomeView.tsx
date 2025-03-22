@@ -1,9 +1,8 @@
 import HomeLoadingSkeleton from "@/components/home-view/loading-structures/HomeLoadingSkeleton.tsx";
-import DeleteJobVacancyDialog from "@/components/DeleteJobVacancyDialog.tsx";
 import {useEffect, useState} from "react";
 import api from "../api/api.ts";
 import {AxiosError} from "axios";
-import {ApiError, JobVacancy} from "../types/apiTypes.ts";
+import {ApiError} from "../types/apiTypes.ts";
 import EmptyJobVacancy from "@/components/home-view/EmptyJobVacancy.tsx";
 import JobsVacancyList from "@/components/home-view/JobsVacancyList.tsx";
 
@@ -15,7 +14,6 @@ import JobsVacancyList from "@/components/home-view/JobsVacancyList.tsx";
 
 export default function HomeView() {
     const [jobVacancies, setJobVacancies] = useState([]);
-    const [selectedJobToDelete, setSelectedJob] = useState<JobVacancy | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     // const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
@@ -42,16 +40,6 @@ export default function HomeView() {
         fetchJobVacancies()
     }, []);
 
-    async function onJobVacancyDeleted(data: boolean) {
-        if (data) {
-            try {
-                const response = await api.get('/openings');
-                setJobVacancies(response.data.message);
-            } catch (error) {
-                console.error("Erro ao atualizar vagas", error);
-            }
-        }
-    }
 
     if (isLoading) {
         return (
@@ -88,11 +76,6 @@ export default function HomeView() {
                     </div>
                 </>
             )}
-
-
-            {selectedJobToDelete &&
-							<DeleteJobVacancyDialog selectedJobToDelete={selectedJobToDelete} setSelectedJob={setSelectedJob}
-							                        onJobVacancyDeleted={onJobVacancyDeleted}/>}
 
 
         </>
