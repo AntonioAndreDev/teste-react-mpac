@@ -1,13 +1,13 @@
 import {z} from "zod";
 import {useEffect, useState} from "react";
 import * as React from "react";
-import api from "../api/api.ts";
 import {AxiosError} from "axios";
 import {ApiError} from "../types/apiTypes.ts";
 import formatSalaryToInt from "../utils/formatSalaryToInt.ts";
 import {useNavigate, useParams} from "react-router";
 import formatIntToSalary from "@/utils/formatIntToSalary.ts";
 import {toast} from "sonner";
+import {useJobStore} from "@/store/useJobStore.ts";
 
 const createJobSchema = z.object({
     company: z
@@ -35,36 +35,28 @@ const createJobSchema = z.object({
 export default function EditJobVacancyView() {
     const {vagaId} = useParams()
     const navigate = useNavigate()
-    const [isLoading, setIsLoading] = useState(false);
+    const {jobVacancy, fetchShowJobVacancy, fetchEditJobVacancy, isLoading} = useJobStore();
+
+    console.log(isLoading)
+
 
     useEffect(() => {
-        async function showJobVacancy() {
-            try {
-                setIsLoading(true)
-                const response = await api.get(`/opening?id=${vagaId}`);
-                const job = response.data.message;
+        fetchShowJobVacancy(Number(vagaId));
+    }, [vagaId]);
 
-                setFormData({
-                    company: job.company,
-                    link: job.link,
-                    location: job.location,
-                    remote: job.remote,
-                    role: job.role,
-                    salary: formatIntToSalary(job.salary),
-                });
-            } catch (error) {
-                const axiosError = error as AxiosError<ApiError>;
-                setServerErrors({
-                    message: axiosError.response?.data.message || '',
-                    statusCode: axiosError.response?.data.statusCode || 0,
-                });
-            } finally {
-                setIsLoading(false)
-            }
+    useEffect(() => {
+        if (jobVacancy && jobVacancy.company !== undefined) {
+            setFormData({
+                company: jobVacancy.company || '',
+                link: jobVacancy.link || '',
+                location: jobVacancy.location || '',
+                remote: jobVacancy.remote || false,
+                role: jobVacancy.role || '',
+                salary: jobVacancy.salary !== undefined ? formatIntToSalary(jobVacancy.salary) : '',
+            });
         }
+    }, [jobVacancy]);
 
-        showJobVacancy()
-    }, [vagaId])
 
     const [formData, setFormData] = useState({
         company: '',
@@ -105,7 +97,7 @@ export default function EditJobVacancyView() {
 
             const salaryToInt = formatSalaryToInt(formData.salary)
 
-            await createJobRequest({...formData, salary: salaryToInt});
+            await editJobRequest({...formData, salary: salaryToInt});
         }
 
         if (zodSchemaResult.error) {
@@ -120,7 +112,7 @@ export default function EditJobVacancyView() {
             });
         }
 
-        async function createJobRequest(formData: {
+        async function editJobRequest(formData: {
             company: string;
             link: string;
             location: string;
@@ -129,8 +121,7 @@ export default function EditJobVacancyView() {
             salary: number;
         }) {
             try {
-                setIsLoading(true)
-                await api.put(`/opening?id=${vagaId}`, formData);
+                fetchEditJobVacancy(Number(vagaId), formData);
 
                 setFormData({
                     company: '',
@@ -153,8 +144,6 @@ export default function EditJobVacancyView() {
                     message: axiosError.response?.data.message || '',
                     statusCode: axiosError.response?.data.statusCode || 0,
                 });
-            } finally {
-                setIsLoading(false)
             }
         }
     };
