@@ -1,3 +1,5 @@
+import {Skeleton} from "@/components/ui/skeleton.tsx";
+
 {/*Observação importante:
     A API retorna uma mensagem de erro quando não há nenhuma vaga cadastrada.
     Dando conflito com a verificação de length do array de vagas, por isso comentei trechos desse código.
@@ -23,6 +25,7 @@ import {formatDateToPtBr} from "@/utils/formateDateToPtBr.ts";
 export default function HomeView() {
     const [jobVacancies, setJobVacancies] = useState([]);
     const [selectedJobToDelete, setSelectedJob] = useState<JobVacancy | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
     // const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
@@ -32,6 +35,7 @@ export default function HomeView() {
             try {
                 const response = await api.get('/openings');
                 setJobVacancies(response.data.message);
+                setIsLoading(true)
 
             } catch (error) {
                 const axiosError = error as AxiosError<ApiError>;
@@ -40,6 +44,8 @@ export default function HomeView() {
                 //     message: axiosError.response?.data.message || '',
                 //     statusCode: axiosError.response?.data.statusCode || 0,
                 // });
+            } finally {
+                setIsLoading(false)
             }
         }
 
@@ -55,6 +61,29 @@ export default function HomeView() {
                 console.error("Erro ao atualizar vagas", error);
             }
         }
+    }
+
+    if (isLoading) {
+        return (
+            <div>
+                <Skeleton className="h-12 w-1/4"/>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+                    <Skeleton className="h-40 w-full"/>
+                    <Skeleton className="h-40 w-full"/>
+                    <Skeleton className="h-40 w-full"/>
+                    <Skeleton className="h-40 w-full"/>
+                    <Skeleton className="h-40 w-full"/>
+                    <Skeleton className="h-40 w-full"/>
+                    <Skeleton className="h-40 w-full"/>
+                    <Skeleton className="h-40 w-full"/>
+                    <Skeleton className="h-40 w-full"/>
+                    <Skeleton className="h-40 w-full"/>
+
+                </div>
+
+            </div>
+        )
     }
 
     return (
