@@ -1,4 +1,3 @@
-import {z} from "zod";
 import {useState} from "react";
 import * as React from "react";
 import api from "../api/api.ts";
@@ -6,14 +5,8 @@ import {AxiosError} from "axios";
 import {ApiError} from "../types/apiTypes.ts";
 import {useNavigate} from "react-router";
 import {toast} from "sonner";
+import {loginSchema} from "@/validations/zodSchemas.ts";
 
-const loginSchema = z.object({
-    email: z.string().email({message: 'Por favor, insira um email válido.'}),
-    password: z
-        .string()
-        .min(7, {message: 'A senha precisa ter pelo menos 7 caracteres.'})
-        .max(20, {message: 'A senha pode ter no máximo 20 caracteres.'}),
-});
 
 export default function LoginView() {
     const [formData, setFormData] = useState({email: '', password: ''});

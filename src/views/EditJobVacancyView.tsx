@@ -1,71 +1,20 @@
-import {z} from "zod";
 import {useEffect, useState} from "react";
 import * as React from "react";
-import api from "../api/api.ts";
-import {AxiosError} from "axios";
-import {ApiError} from "../types/apiTypes.ts";
 import formatSalaryToInt from "../utils/formatSalaryToInt.ts";
 import {useNavigate, useParams} from "react-router";
 import formatIntToSalary from "@/utils/formatIntToSalary.ts";
 import {toast} from "sonner";
+import {useJobStore} from "@/store/useJobStore.ts";
+import EditJobLoadingSkeleton from "@/components/edit-job-view/loading-structures/EditJobLoadingSkeleton.tsx";
+import {createOrEditJobSchema} from "@/validations/zodSchemas.ts";
+import {JobVacancyFormData, JobVacancyFormDataErrors} from "@/types/jobTypes.ts";
 
-const createJobSchema = z.object({
-    company: z
-        .string()
-        .min(3, {message: 'O nome da empresa precisa ter pelo menos 3 caracteres.'})
-        .max(50, {message: 'O nome da empresa pode ter no máximo 50 caracteres.'}),
-    link: z
-        .string()
-        .url({message: 'Por favor, insira um link válido.'}),
-    location: z
-        .string()
-        .min(3, {message: 'O local precisa ter pelo menos 3 caracteres.'})
-        .max(50, {message: 'O local pode ter no máximo 50 caracteres.'}),
-    remote: z.boolean(),
-    role: z
-        .string()
-        .min(3, {message: 'O cargo precisa ter pelo menos 3 caracteres.'})
-        .max(50, {message: 'O cargo pode ter no máximo 50 caracteres.'}),
-    salary: z
-        .string()
-        .min(3, {message: 'O salário precisa ter pelo menos 3 caracteres.'})
-        .max(50, {message: 'O salário pode ter no máximo 50 caracteres.'}),
-});
 
 export default function EditJobVacancyView() {
-    const {vagaId} = useParams()
+    const {jobVacancy, fetchShowJobVacancy, fetchEditJobVacancy, isLoading} = useJobStore();
+    const [formErrors, setFormErrors] = useState<JobVacancyFormDataErrors>();
     const navigate = useNavigate()
-    const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
-        async function showJobVacancy() {
-            try {
-                setIsLoading(true)
-                const response = await api.get(`/opening?id=${vagaId}`);
-                const job = response.data.message;
-
-                setFormData({
-                    company: job.company,
-                    link: job.link,
-                    location: job.location,
-                    remote: job.remote,
-                    role: job.role,
-                    salary: formatIntToSalary(job.salary),
-                });
-            } catch (error) {
-                const axiosError = error as AxiosError<ApiError>;
-                setServerErrors({
-                    message: axiosError.response?.data.message || '',
-                    statusCode: axiosError.response?.data.statusCode || 0,
-                });
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        showJobVacancy()
-    }, [vagaId])
-
+    const {vagaId} = useParams()
     const [formData, setFormData] = useState({
         company: '',
         link: '',
@@ -74,14 +23,6 @@ export default function EditJobVacancyView() {
         role: '',
         salary: '',
     });
-    const [formErrors, setFormErrors] = useState<{
-        company?: string,
-        link?: string,
-        location?: string,
-        role?: string,
-        salary?: string,
-    }>();
-    const [serverErrors, setServerErrors] = useState<{ message: string, statusCode: number }>();
 
     const setFormValue = (ev: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({...formData, [ev.target.name]: ev.target.value});
@@ -90,7 +31,7 @@ export default function EditJobVacancyView() {
     const handleSubmission = async (ev: React.FormEvent) => {
         ev.preventDefault();
 
-        const zodSchemaResult = createJobSchema.safeParse(formData);
+        const zodSchemaResult = createOrEditJobSchema.safeParse(formData);
 
         if (zodSchemaResult.success) {
             setFormErrors(
@@ -105,7 +46,7 @@ export default function EditJobVacancyView() {
 
             const salaryToInt = formatSalaryToInt(formData.salary)
 
-            await createJobRequest({...formData, salary: salaryToInt});
+            await editJobRequest({...formData, salary: salaryToInt});
         }
 
         if (zodSchemaResult.error) {
@@ -120,44 +61,48 @@ export default function EditJobVacancyView() {
             });
         }
 
-        async function createJobRequest(formData: {
-            company: string;
-            link: string;
-            location: string;
-            remote: boolean;
-            role: string;
-            salary: number;
-        }) {
-            try {
-                setIsLoading(true)
-                await api.put(`/opening?id=${vagaId}`, formData);
+        async function editJobRequest(formData: JobVacancyFormData) {
+            fetchEditJobVacancy(Number(vagaId), formData);
 
-                setFormData({
-                    company: '',
-                    link: '',
-                    location: '',
-                    remote: false,
-                    role: '',
-                    salary: '',
-                });
+            setFormData({
+                company: '',
+                link: '',
+                location: '',
+                remote: false,
+                role: '',
+                salary: '',
+            });
 
-                navigate('/')
-                toast.success('Vaga editada com sucesso!', {
-                    className: '!bg-green-500 !text-white !text-base',
-                    duration: 8_000
-                })
+            navigate('/')
+            toast.success('Vaga editada com sucesso!', {
+                className: '!bg-green-500 !text-white !text-base',
+                duration: 8_000
+            })
 
-            } catch (error) {
-                const axiosError = error as AxiosError<ApiError>;
-                setServerErrors({
-                    message: axiosError.response?.data.message || '',
-                    statusCode: axiosError.response?.data.statusCode || 0,
-                });
-            } finally {
-                setIsLoading(false)
-            }
+
         }
     };
+
+    useEffect(() => {
+        fetchShowJobVacancy(Number(vagaId));
+    }, []);
+
+    useEffect(() => {
+        if (jobVacancy && jobVacancy.company !== undefined) {
+            setFormData({
+                company: jobVacancy.company || '',
+                link: jobVacancy.link || '',
+                location: jobVacancy.location || '',
+                remote: jobVacancy.remote || false,
+                role: jobVacancy.role || '',
+                salary: jobVacancy.salary !== undefined ? formatIntToSalary(jobVacancy.salary) : '',
+            });
+        }
+    }, [jobVacancy]);
+
+    if (isLoading) {
+        return <EditJobLoadingSkeleton/>
+    }
 
     return (
         <div>
@@ -289,11 +234,6 @@ export default function EditJobVacancyView() {
                     </div>
                 </div>
 
-                {serverErrors && (
-                    <div className="bg-red-400 p-4 rounded-md">
-                        <p className="text-black text-sm font-semibold text-center uppercase">{serverErrors.message} ({serverErrors.statusCode})</p>
-                    </div>
-                )}
 
                 <div>
                     <button
