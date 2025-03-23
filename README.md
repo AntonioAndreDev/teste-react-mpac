@@ -19,10 +19,13 @@ simples e uma interface para cadastro e gerenciamento de vagas de emprego.
   </li>
 </ul>
 
+## Clone o repositório na sua máquina (SSH)
+```bash
+git clone git@github.com:AntonioAndreDev/teste-react-mpac.git
+```
+
 ## Configurando variáveis de ambiente
-
 Na raíz do projeto crie um arquivo chamado <strong>.env</strong> e adicione as seguintes variáveis de ambiente:
-
 ```dotenv
 VITE_API_URL=https://openingteste.mpac.mp.br/api/v1
 ```
@@ -31,13 +34,13 @@ VITE_API_URL=https://openingteste.mpac.mp.br/api/v1
 
 #### 1. Instalação das dependências
 
-```js
+```bash
 npm install
 ```
 
 #### 2. Execução do projeto em ambiente de desenvolvimento (acessível em http://localhost:5173)
 
-```js
+```bash
 npm run dev
 ```
 
@@ -45,13 +48,13 @@ npm run dev
 
 #### 1. Construção da imagem do projeto
 
-```js
+```bash
 docker build -t teste-react-mpac-antonio-andre . 
 ```
 
 #### 2. Execução do projeto em ambiente de produção (acessível em http://localhost:8080)
 
-```js
+```bash
 docker run -p 8080:8080 teste-react-mpac-antonio-andre
 ```
 
