@@ -1,54 +1,240 @@
-# React + TypeScript + Vite
+# Desafio Técnico - Desenvolvedor(a) Frontend React - Ministério Público do Estado do Acre
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Esse projeto é um desafio técnico que faz parte do processo seletivo do Ministério Público do Estado do Acre para o cargo de Programador.
 
-Currently, two official plugins are available:
+## Objetivo
+Desenvolver uma aplicação <strong>Frontend</strong> utilizando <strong>React</strong>, com um fluxo de autenticação simples e uma interface para cadastro e gerenciamento de vagas de emprego.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Pré-requisitos
+<ul>
+  <li>
+    Node.js
+  </li>
+  <li>
+    Docker (para executar em ambiente de produção. Não obrigatório)
+  </li>
+</ul>
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
+## Executando a aplicação (LOCAL)
+#### 1. Instalação das dependências
 ```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
+#### 2. Execução do projeto em ambiente de desenvolvimento (acessível em http://localhost:5173)
 ```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+npm run dev
 ```
+## Executando a aplicação (PRODUÇÃO) - Necessário Docker
+#### 1. Construção da imagem do projeto
+```js
+ docker build -t teste-react-mpac-antonio-andre .  
+```
+
+#### 2. Execução do projeto em ambiente de produção (acessível em http://localhost:8080)
+```js
+ docker run -p 8080:8080 teste-react-mpac-antonio-andre
+```
+
+## Tecnologias utilizadas
+<ul>
+  <li>
+    React + Vite
+  </li>
+  <li>
+    TailwindCSS + Tailwind Plus
+  </li>
+  <li>
+    Shadcn UI
+  </li>
+  <li>
+    Zustand
+  </li>
+</ul>
+
+## Diferenciais implementados
+<ul>
+  <li>
+    Utilização de TypeScript
+  </li>
+  <li>
+    Dockerização da aplicação
+  </li>
+  <li>
+    Boas práticas de organização de código e estrutura de pastas
+  </li>
+  <li>
+    Responsividade e uma boa interface de usuário (UX/UI)
+  </li>
+  <li>
+    Git flow
+  </li>
+</ul>
+
+## Funcionalidades da Aplicação
+
+### 1. Autenticação
+<strong>Para acessar o sistema é necessário que o usuário tenha uma conta que já esteja devidamente autenticada/registrada no servidor da aplicação</strong>. <br/>
+(O usuário autenticado é disponibilizado pela própria equipe do Ministério Público do Estado do Acre, não sendo necessário implementar um sistema de registro de usuário)
+
+#### Tela de Login
+<ul>
+  <li>
+    Campos obrigatórios:
+    <ul>
+      <li>
+        Email
+      </li>
+      <li>
+        Senha
+    </li>
+    </ul>
+  </li>
+</ul>
+
+### 2. Operações de CRUD das Vagas
+Após o usuário ser autenticado na aplicação será possível realizar todas as ações de:
+
+#### Criar uma vaga (POST)
+<ul>
+  <li>
+    Campos obrigatórios:
+    <ul>
+      <li>
+        Nome da empresa
+      </li>
+      <li>
+        Link
+      </li>
+      <li>
+        Cargo/Função
+      </li>
+      <li>
+        Salaŕio/Remuneração
+      </li>
+      <li>
+        Remoto (booleano)
+      </li>
+    </ul>
+  </li>
+</ul>
+
+#### Atualizar uma vaga (PUT)
+<ul>
+  <li>
+    Campos obrigatórios:
+    <ul>
+      <li>
+        Nome da empresa
+      </li>
+      <li>
+        Link
+      </li>
+      <li>
+        Cargo/Função
+      </li>
+      <li>
+        Salaŕio/Remuneração
+      </li>
+      <li>
+        Remoto (booleano)
+      </li>
+    </ul>
+  </li>
+</ul>
+
+#### Listar todas as vagas (GET)
+<ul>
+  <li>
+    Campos visíveis:
+    <ul>
+      <li>
+        Cargo/Função
+      </li>
+      <li>
+        Nome da empresa
+      </li>
+      <li>
+        Localização
+      </li>
+    </ul>
+  </li>
+</ul>
+
+#### Mostrar detalhes uma vaga (GET)
+<ul>
+  <li>
+    Campos visíveis:
+    <ul>
+      <li>
+        Nome da empresa
+      </li>
+      <li>
+        Link
+      </li>
+      <li>
+        Salário
+      </li>
+      <li>
+        Cargo/Função
+      </li>
+      <li>
+        Salaŕio/Remuneração
+      </li>
+      <li>
+        Modalidade
+      </li>
+      <li>
+        Data de criação
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+## Detalhes importantes
+<ul>
+  <li>
+    Um usuário vai conseguir acessar as rotas internas da aplicação somente se estiver autenticado
+  </li>
+  <li>
+    Um usuário que está autenticado não terá acesso à rota "/login"
+  </li>
+  <li>
+    Um usuário terá acesso à rota "/login" apenas se não estiver autenticado ou com token inválido
+  </li>
+</ul>
+
+## Imagens da aplicação
+### 1. Tela de login
+![image](https://github.com/user-attachments/assets/45f4266a-3d48-4d1c-8ec6-9d2c41737a3e)
+
+<br/>
+
+### 2. Tela de listagem de vagas (sem vagas cadastradas)
+![image](https://github.com/user-attachments/assets/df421365-9cc4-4203-8571-578628261702)
+
+
+<br/>
+
+### 3. Tela de listagem de vagas (com vagas cadastradas)
+![image](https://github.com/user-attachments/assets/921dbd79-77e0-4d44-878a-a66d3842881b)
+
+
+<br/>
+
+### 4. Tela de registro/criação de uma vaga
+![image](https://github.com/user-attachments/assets/f7b66369-d291-4c54-b3bd-a7136e902740)
+
+<br/>
+
+### 5. Tela de edição de uma vaga
+![image](https://github.com/user-attachments/assets/c856d8a6-a84d-422e-9cb3-4821bbc78d9c)
+
+<br/>
+
+### 6. Tela de remover uma vaga
+![image](https://github.com/user-attachments/assets/02b9fd2f-ae71-49aa-8f8c-40796837e327)
+
+
+
