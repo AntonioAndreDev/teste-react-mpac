@@ -32,16 +32,13 @@ VITE_API_URL=https://openingteste.mpac.mp.br/api/v1
 #### 1. Instalação das dependências
 
 ```js
-npm
-install
+npm install
 ```
 
 #### 2. Execução do projeto em ambiente de desenvolvimento (acessível em http://localhost:5173)
 
 ```js
-npm
-run
-dev
+npm run dev
 ```
 
 ## Executando a aplicação (PRODUÇÃO) - Necessário Docker
@@ -49,20 +46,13 @@ dev
 #### 1. Construção da imagem do projeto
 
 ```js
- docker
-build - t
-teste - react - mpac - antonio - andre.  
+docker build -t teste-react-mpac-antonio-andre . 
 ```
 
 #### 2. Execução do projeto em ambiente de produção (acessível em http://localhost:8080)
 
 ```js
- docker
-run - p
-8080
-:
-8080
-teste - react - mpac - antonio - andre
+docker run -p 8080:8080 teste-react-mpac-antonio-andre
 ```
 
 ## Tecnologias utilizadas
