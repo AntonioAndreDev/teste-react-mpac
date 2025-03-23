@@ -1,10 +1,12 @@
-import {NavLink} from "react-router";
+import {NavLink, useLocation} from "react-router";
 import {navigation} from "@/routes/navigation.ts";
 import {classNames} from "@/utils/classNames.ts";
 import Logout from "@/components/layouts/only-authenticate-layout/navigation/Logout.tsx";
 
 
 export default function DesktopNav() {
+    const location = useLocation();
+
     return (
         <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
