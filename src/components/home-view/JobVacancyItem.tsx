@@ -13,20 +13,13 @@ import {formatDateToPtBr} from "@/utils/formateDateToPtBr.ts";
 import {useNavigate} from "react-router";
 import DeleteJobVacancyDialog from "@/components/home-view/DeleteJobVacancyDialog.tsx";
 import {useState} from "react";
-import {useJobStore} from "@/store/useJobStore.ts";
 import {JobVacancy} from "@/types/jobTypes.ts";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 
 export default function JobVacancyItem({jobVacancy}: { jobVacancy: JobVacancy }) {
-    const {fetchJobVacancies, removeJobVacancy} = useJobStore();
     const [selectedJobToDelete, setSelectedJobToDelete] = useState<JobVacancy | null>(null);
     const navigate = useNavigate();
 
-    const handleJobVacancyDeleted = async (id: number) => {
-        await removeJobVacancy(id);
-        await fetchJobVacancies();
-        setSelectedJobToDelete(null);
-    };
 
     function handleCloseDialog() {
         setSelectedJobToDelete(null)
@@ -134,7 +127,6 @@ export default function JobVacancyItem({jobVacancy}: { jobVacancy: JobVacancy })
             {selectedJobToDelete && (
                 <DeleteJobVacancyDialog
                     selectedJobToDelete={selectedJobToDelete}
-                    onJobVacancyDeleted={handleJobVacancyDeleted}
                     onClose={handleCloseDialog}
                 />
             )}

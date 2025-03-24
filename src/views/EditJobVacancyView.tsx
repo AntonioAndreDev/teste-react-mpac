@@ -88,7 +88,7 @@ export default function EditJobVacancyView() {
     }, []);
 
     useEffect(() => {
-        if (jobVacancy && jobVacancy.company !== undefined) {
+        if (jobVacancy) {
             setFormData({
                 company: jobVacancy.company || '',
                 link: jobVacancy.link || '',

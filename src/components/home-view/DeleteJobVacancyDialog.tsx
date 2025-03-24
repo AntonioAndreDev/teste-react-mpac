@@ -10,20 +10,22 @@ import {
 import {Button} from "@/components/ui/button.tsx";
 import {toast} from "sonner";
 import {JobVacancy} from "@/types/jobTypes.ts";
+import {useJobStore} from "@/store/useJobStore.ts";
 
 export default function DeleteJobVacancyDialog({
                                                    selectedJobToDelete,
-                                                   onJobVacancyDeleted,
                                                    onClose
                                                }: {
     selectedJobToDelete: JobVacancy | null;
-    onJobVacancyDeleted: (id: number) => void;
     onClose: () => void;
 }) {
+    const {fetchJobVacancies, removeJobVacancy} = useJobStore();
     if (!selectedJobToDelete) return null;
 
-    const handleDelete = () => {
-        onJobVacancyDeleted(selectedJobToDelete.id);
+    const handleDelete = async () => {
+        await removeJobVacancy(selectedJobToDelete.id);
+        await fetchJobVacancies();
+
         onClose()
         toast.success('Vaga deletada com sucesso!', {
             className: '!bg-green-500 !text-white !text-base',
